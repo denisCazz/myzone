@@ -2,12 +2,11 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <nav className="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-primary/10">
@@ -37,28 +36,9 @@ export default function Navbar() {
             <Link href="/vetrina" className="text-secondary hover:text-primary font-medium transition-colors">
               Vetrina
             </Link>
-            
-            {/* Dropdown */}
-            <div className="relative">
-              <button 
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-                className="flex items-center text-secondary hover:text-primary font-medium transition-colors"
-              >
-                Vendo Casa <ChevronDown className="ml-1 h-4 w-4" />
-              </button>
-              
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
-                  <Link 
-                    href="/valuta-casa" 
-                    className="block px-4 py-2 text-sm text-secondary hover:bg-black/5 hover:text-primary"
-                  >
-                    Valuta casa
-                  </Link>
-                </div>
-              )}
-            </div>
+            <Link href="/valuta-casa" className="text-secondary hover:text-primary font-medium transition-colors">
+              Valuta casa
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -98,16 +78,13 @@ export default function Navbar() {
             >
               Vetrina
             </Link>
-            <div className="px-3 py-2">
-              <div className="text-base font-medium text-secondary mb-2">Vendo Casa</div>
-              <Link 
-                href="/valuta-casa" 
-                className="block pl-4 py-2 rounded-md text-sm font-medium text-secondary hover:text-primary hover:bg-black/5"
-                onClick={() => setIsOpen(false)}
-              >
-                Valuta casa
-              </Link>
-            </div>
+            <Link
+              href="/valuta-casa"
+              className="block px-3 py-2 rounded-md text-base font-medium text-secondary hover:text-primary hover:bg-black/5"
+              onClick={() => setIsOpen(false)}
+            >
+              Valuta casa
+            </Link>
           </div>
         </div>
       )}

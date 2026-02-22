@@ -1,13 +1,18 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseAdminClient } from '@/lib/supabase-admin';
 import { Annuncio } from '@/types';
 import Link from 'next/link';
 import { Plus, Edit, Trash2, LogOut } from 'lucide-react';
 import { redirect } from 'next/navigation';
+import { requireAdminSession } from '@/lib/admin-auth';
+import { deleteAnnuncioAction, logoutAction } from './actions';
 
 export default async function AdminDashboard() {
-  // In a real app, you'd check the session here
-  // const { data: { session } } = await supabase.auth.getSession();
-  // if (!session) redirect('/admin/login');
+  const session = await requireAdminSession();
+  const supabase = getSupabaseAdminClient();
+
+  if (!supabase) {
+    redirect('/admin/login');
+  }
 
   const { data: annunci, error } = await supabase
     .from('annunci')
@@ -27,10 +32,13 @@ export default async function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 dark:bg-black">
+    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-secondary">Gestione Annunci</h1>
+          <div>
+            <h1 className="text-3xl font-bold text-secondary">Gestione Annunci</h1>
+            <p className="text-sm text-secondary/70 mt-1">Accesso come {session.user.email}</p>
+          </div>
           <div className="flex gap-4">
             <Link
               href="/admin/nuovo"
@@ -39,72 +47,81 @@ export default async function AdminDashboard() {
               <Plus className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
               Nuovo Annuncio
             </Link>
-            <button
-              className="inline-flex items-center px-4 py-2 border border-black/20 rounded-md shadow-sm text-sm font-medium text-secondary bg-white hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            >
-              <LogOut className="-ml-1 mr-2 h-5 w-5 text-black/60" aria-hidden="true" />
-              Esci
-            </button>
+            <form action={logoutAction}>
+              <button
+                className="inline-flex items-center px-4 py-2 border border-secondary/20 rounded-md shadow-sm text-sm font-medium text-secondary bg-white hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              >
+                <LogOut className="-ml-1 mr-2 h-5 w-5 text-secondary/60" aria-hidden="true" />
+                Esci
+              </button>
+            </form>
           </div>
         </div>
 
-        <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-black/20">
+        <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-secondary/20">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-black/15">
-              <thead className="bg-black/5">
+            <table className="min-w-full divide-y divide-secondary/15">
+              <thead className="bg-primary/5">
                 <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black/60 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
                     Titolo
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black/60 uppercase tracking-wider">
-                    Tipologia
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
+                    Località
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black/60 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
+                    Contratto/Stato
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
                     Prezzo
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-black/60 uppercase tracking-wider">
-                    Data
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
+                    Mq/Locali
                   </th>
                   <th scope="col" className="relative px-6 py-3">
                     <span className="sr-only">Azioni</span>
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-black/10">
+              <tbody className="bg-white divide-y divide-secondary/10">
                 {annunci?.map((annuncio: Annuncio) => (
-                  <tr key={annuncio.id} className="hover:bg-black/5">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr key={annuncio.id} className="hover:bg-primary/5">
+                    <td className="px-6 py-4">
                       <div className="text-sm font-medium text-secondary">{annuncio.titolo}</div>
-                      <div className="text-sm text-black/60">{annuncio.mq} mq • {annuncio.numero_stanze} locali</div>
+                      <div className="text-xs text-secondary/65 mt-1">{annuncio.tipologia_immobile}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        annuncio.tipologia === 'vendita' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                        {annuncio.tipologia}
-                      </span>
+                      <div className="text-sm text-secondary">{annuncio.comune}</div>
+                      <div className="text-xs text-secondary/65">{annuncio.indirizzo}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black/60">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary/65">
+                      <div className="text-sm text-secondary">{annuncio.tipo_contratto}</div>
+                      <div className="text-xs text-secondary/65">{annuncio.stato}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary/70">
                       {formatPrice(annuncio.prezzo)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black/60">
-                      {new Date(annuncio.created_at || '').toLocaleDateString('it-IT')}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary/70">
+                      {annuncio.superficie_mq} mq • {annuncio.numero_locali} locali
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end gap-3">
-                        <Link href={`/admin/modifica/${annuncio.id}`} className="text-indigo-600 hover:text-indigo-900">
+                        <Link href={`/admin/modifica/${annuncio.id}`} className="text-primary hover:text-primary/80">
                           <Edit className="h-5 w-5" />
                         </Link>
-                        <button className="text-red-600 hover:text-red-900">
-                          <Trash2 className="h-5 w-5" />
-                        </button>
+                        <form action={deleteAnnuncioAction}>
+                          <input type="hidden" name="id" value={annuncio.id} />
+                          <button className="text-primary/75 hover:text-primary">
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </form>
                       </div>
                     </td>
                   </tr>
                 ))}
                 {(!annunci || annunci.length === 0) && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-black/60">
+                    <td colSpan={6} className="px-6 py-12 text-center text-secondary/65">
                       Nessun annuncio presente. Clicca su "Nuovo Annuncio" per iniziare.
                     </td>
                   </tr>

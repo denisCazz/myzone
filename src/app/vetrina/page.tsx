@@ -1,11 +1,26 @@
-import { supabase } from '@/lib/supabase';
+import { getSupabaseServerClient } from '@/lib/supabase-server';
 import { Annuncio } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Bed, Maximize, Euro } from 'lucide-react';
+import { Bed, Maximize, MapPin, Building2 } from 'lucide-react';
 
 // This is a Server Component
 export default async function Vetrina() {
+  const supabase = getSupabaseServerClient();
+
+  if (!supabase) {
+    return (
+      <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto bg-white border border-primary/20 rounded-2xl p-8 text-center">
+          <h1 className="text-2xl font-bold text-secondary mb-3">Configurazione Supabase mancante</h1>
+          <p className="text-secondary/80">
+            Imposta <strong>NEXT_PUBLIC_SUPABASE_URL</strong> e <strong>NEXT_PUBLIC_SUPABASE_ANON_KEY</strong> nel file <strong>.env.local</strong>.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Fetch data from Supabase
   const { data: annunci, error } = await supabase
     .from('annunci')
@@ -65,6 +80,7 @@ export default async function Vetrina() {
                     <Image
                       src={annuncio.immagine_url}
                       alt={annuncio.titolo}
+                      unoptimized
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -76,9 +92,20 @@ export default async function Vetrina() {
                   )}
                   <div className="absolute top-4 left-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white ${
-                      annuncio.tipologia === 'vendita' ? 'bg-primary' : 'bg-secondary'
+                      annuncio.tipo_contratto === 'IN VENDITA' ? 'bg-primary' : 'bg-secondary'
                     }`}>
-                      {annuncio.tipologia === 'vendita' ? 'In Vendita' : 'In Affitto'}
+                      {annuncio.tipo_contratto}
+                    </span>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                      annuncio.stato === 'DISPONIBILE'
+                        ? 'bg-white text-secondary'
+                        : annuncio.stato === 'IN TRATTATIVA'
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-black/70 text-white'
+                    }`}>
+                      {annuncio.stato}
                     </span>
                   </div>
                 </div>
@@ -88,22 +115,36 @@ export default async function Vetrina() {
                   <h3 className="text-xl font-bold text-secondary mb-2 line-clamp-2 min-h-[3.5rem]">
                     {annuncio.titolo}
                   </h3>
+
+                  <div className="flex items-start gap-2 text-secondary/75 text-sm mb-3">
+                    <MapPin className="w-4 h-4 mt-0.5" />
+                    <p className="line-clamp-2">
+                      {annuncio.provincia} · {annuncio.comune} · {annuncio.indirizzo}
+                    </p>
+                  </div>
                   
                   <div className="text-2xl font-bold text-primary mb-4">
                     {formatPrice(annuncio.prezzo)}
-                    {annuncio.tipologia === 'affitto' && <span className="text-sm text-primary/70 font-normal">/mese</span>}
+                    {annuncio.tipo_contratto === 'IN AFFITTO' && <span className="text-sm text-primary/70 font-normal">/mese</span>}
                   </div>
 
                   <div className="flex items-center gap-4 text-secondary/80 mb-6 border-t border-b border-primary/15 py-4">
                     <div className="flex items-center gap-1">
                       <Maximize className="w-4 h-4" />
-                      <span className="text-sm font-medium">{annuncio.mq} mq</span>
+                      <span className="text-sm font-medium">{annuncio.superficie_mq} mq</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Bed className="w-4 h-4" />
-                      <span className="text-sm font-medium">{annuncio.numero_stanze} locali</span>
+                      <span className="text-sm font-medium">{annuncio.numero_locali} locali</span>
                     </div>
                   </div>
+
+                  {annuncio.agenzia_nome && (
+                    <div className="flex items-center gap-2 text-secondary/70 text-sm mb-4">
+                      <Building2 className="w-4 h-4" />
+                      <span className="line-clamp-1">{annuncio.agenzia_nome}</span>
+                    </div>
+                  )}
 
                   <p className="text-secondary/80 text-sm line-clamp-3 mb-6 flex-grow">
                     {annuncio.descrizione}

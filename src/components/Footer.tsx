@@ -56,6 +56,11 @@ export default function Footer() {
                   Valuta la tua casa
                 </Link>
               </li>
+              <li>
+                <Link href="/admin/login" className="text-white/85 hover:text-white transition-colors">
+                  Accesso Admin
+                </Link>
+              </li>
             </ul>
           </div>
 

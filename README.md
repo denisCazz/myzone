@@ -1,20 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Myzone - Sito Agenzia Immobiliare
 
-## Getting Started
+Progetto Next.js (App Router) con Tailwind CSS e integrazione Supabase per la gestione degli annunci immobiliari.
 
-First, run the development server:
+## Avvio locale
+
+1. Installa dipendenze:
+
+```bash
+npm install
+```
+
+2. Crea il file ambiente:
+
+```bash
+cp .env.example .env.local
+```
+
+3. Inserisci in `.env.local`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
+4. Avvia il progetto:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup Supabase (schema annunci)
+
+1. Apri Supabase SQL Editor.
+2. Esegui lo script in [supabase/schema.sql](supabase/schema.sql).
+3. Verifica che la tabella `public.annunci` sia stata creata.
+
+Campi principali:
+
+- `id`
+- `titolo`
+- `descrizione`
+- `prezzo`
+- `mq`
+- `numero_stanze`
+- `immagine_url`
+- `tipologia` (`vendita` / `affitto`)
+
+## Note
+
+- La pagina [src/app/vetrina/page.tsx](src/app/vetrina/page.tsx) recupera gli annunci tramite Server Component.
+- Se le variabili Supabase mancano, la pagina mostra un messaggio di configurazione.
+- Le immagini remote degli annunci sono renderizzate con `unoptimized`.
+
+## Area Admin (auth custom)
+
+- Accesso da footer: `Accesso Admin`.
+- Login page: `/admin/login`.
+- Autenticazione basata su tabelle custom:
+	- `admin_utenti`
+	- `admin_sessioni`
+- Utente iniziale creato dallo schema SQL:
+	- email: `admin@myzone.casa`
+	- password: `admin123`
+
+Importante: cambia password subito dopo il primo accesso aggiornando `password_hash` con hash bcrypt.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
