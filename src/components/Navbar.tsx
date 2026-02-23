@@ -16,7 +16,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-primary/10 shadow-sm shadow-primary/5">
+    <nav className="sticky top-0 z-50 bg-white border-b border-primary/10 shadow-sm shadow-primary/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingLeft: "max(1rem, env(safe-area-inset-left))", paddingRight: "max(1rem, env(safe-area-inset-right))" }}>
         <div className="flex justify-between h-[72px]">
           <Link
@@ -63,7 +63,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-primary/10 bg-white/95 backdrop-blur-xl animate-fade-in">
+        <div className="md:hidden border-t border-primary/10 bg-white animate-fade-in">
           <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <Link

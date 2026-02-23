@@ -10,15 +10,14 @@ export default function Home() {
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-[#8a2d39] via-[#a13644] to-[#c45a68]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(255,255,255,0.2),transparent)]" />
-          <div className="absolute -top-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-primary/30 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[radial-gradient(circle_at_100%_0%,rgba(255,255,255,0.15),transparent_70%)]" />
+          <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[radial-gradient(circle_at_0%_100%,rgba(161,54,68,0.3),transparent_70%)]" />
         </div>
 
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 border border-white/25 backdrop-blur-sm mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 border border-white/25 mb-8">
                 <Sparkles className="w-4 h-4" />
                 <span className="text-sm font-medium">Agenzia premium a Cavallermaggiore</span>
               </div>
@@ -39,18 +38,18 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/servizi"
-                  className="inline-flex w-full sm:w-auto items-center justify-center bg-white/15 border-2 border-white/40 text-white hover:bg-white/25 font-bold py-4 px-8 rounded-2xl transition-all backdrop-blur-sm"
+                  className="inline-flex w-full sm:w-auto items-center justify-center bg-white/15 border-2 border-white/40 text-white hover:bg-white/25 font-bold py-4 px-8 rounded-2xl transition-all"
                 >
                   Scopri i Servizi
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12 max-w-xl">
-                <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm px-5 py-4 hover:bg-white/15 transition-colors">
+                <div className="rounded-2xl border border-white/20 bg-white/10 px-5 py-4 hover:bg-white/15 transition-colors">
                   <p className="text-xl font-bold">Esperienza</p>
                   <p className="text-sm text-white/80 mt-0.5">Esperienza sul territorio</p>
                 </div>
-                <div className="rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm px-5 py-4 hover:bg-white/15 transition-colors">
+                <div className="rounded-2xl border border-white/20 bg-white/10 px-5 py-4 hover:bg-white/15 transition-colors">
                   <p className="text-xl font-bold">Servizio completo</p>
                   <p className="text-sm text-white/80 mt-0.5">Dalla valutazione al rogito</p>
                 </div>
@@ -59,8 +58,7 @@ export default function Home() {
 
             <div className="relative flex justify-center md:justify-end mt-8 md:mt-0">
               <div className="relative w-full max-w-lg">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 to-primary/10 rounded-3xl blur-2xl" />
-                <div className="relative bg-white/10 border border-white/20 rounded-2xl p-4 backdrop-blur-md shadow-2xl">
+                <div className="relative bg-white/10 border border-white/20 rounded-2xl p-4 shadow-2xl">
                   <Image
                     src="/logo.jpg"
                     alt="Brand Myzone"
