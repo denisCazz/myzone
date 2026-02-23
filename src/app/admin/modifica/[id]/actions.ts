@@ -5,9 +5,24 @@ import { revalidatePath } from 'next/cache';
 import { requireAdminSession } from '@/lib/admin-auth';
 import { getSupabaseAdminClient } from '@/lib/supabase-admin';
 
+const STORAGE_BUCKET = 'annunci-images';
+
 type UpdateState = {
   error: string;
 };
+
+async function uploadImageToStorage(supabase: ReturnType<typeof getSupabaseAdminClient>, file: File): Promise<string | null> {
+  if (!file || file.size === 0 || file.size > 5 * 1024 * 1024) return null;
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  if (!['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return null;
+  const path = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
+  const { data, error } = await supabase!.storage
+    .from(STORAGE_BUCKET)
+    .upload(path, file, { contentType: file.type, upsert: false });
+  if (error) return null;
+  const { data: urlData } = supabase!.storage.from(STORAGE_BUCKET).getPublicUrl(data.path);
+  return urlData.publicUrl;
+}
 
 export async function updateAnnuncioAction(id: string, _: UpdateState, formData: FormData): Promise<UpdateState> {
   await requireAdminSession();
@@ -26,7 +41,12 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
   const provincia = String(formData.get('provincia') || '').trim();
   const comune = String(formData.get('comune') || '').trim();
   const indirizzo = String(formData.get('indirizzo') || '').trim();
-  const immagineUrl = String(formData.get('immagine_url') || '').trim();
+  let immagineUrl = String(formData.get('immagine_url') || '').trim();
+  const file = formData.get('immagine') as File | null;
+  if (file && file.size > 0) {
+    const uploadedUrl = await uploadImageToStorage(supabase, file);
+    if (uploadedUrl) immagineUrl = uploadedUrl;
+  }
   const piano = String(formData.get('piano') || '').trim();
   const ape = String(formData.get('ape') || '').trim();
   const riscaldamento = String(formData.get('riscaldamento') || '').trim();
@@ -57,6 +77,12 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
     return { error: 'Tipo contratto non valido.' };
   }
 
+  if (prezzo <= 0) {
+    return { error: 'Il prezzo deve essere maggiore di 0.' };
+  }
+
+  const superficieMqInt = Math.round(superficieMq) || 0;
+  const numeroLocaliInt = Math.round(numeroLocali) || 0;
   const { error } = await supabase
     .from('annunci')
     .update({
@@ -70,10 +96,12 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
       provincia,
       comune,
       indirizzo,
-      superficie_mq: superficieMq,
-      numero_locali: numeroLocali,
+      mq: superficieMqInt,
+      superficie_mq: superficieMqInt,
+      numero_stanze: numeroLocaliInt,
+      numero_locali: numeroLocaliInt,
       piano: piano || null,
-      bagni,
+      bagni: Math.round(bagni) || 0,
       ape: ape || null,
       ipe: ipe > 0 ? ipe : null,
       riscaldamento: riscaldamento || null,
@@ -93,7 +121,8 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
     .eq('id', id);
 
   if (error) {
-    return { error: 'Errore durante l’aggiornamento annuncio.' };
+    console.error('Supabase update error:', error);
+    return { error: 'Errore durante l’modifica.' };
   }
 
   revalidatePath('/admin');

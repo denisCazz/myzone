@@ -24,10 +24,10 @@ export default async function ModificaAnnuncioPage({ params }: { params: { id: s
   }
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <Link href="/admin" className="inline-flex items-center text-secondary hover:text-primary mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+    <div className="min-h-screen bg-white">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Link href="/admin" className="inline-flex items-center gap-2 text-secondary/75 hover:text-primary mb-8 transition-colors font-medium text-sm">
+          <ArrowLeft className="w-4 h-4" />
           Torna alla dashboard
         </Link>
 

@@ -1,7 +1,8 @@
 import { getSupabaseAdminClient } from '@/lib/supabase-admin';
 import { Annuncio } from '@/types';
 import Link from 'next/link';
-import { Plus, Edit, Trash2, LogOut } from 'lucide-react';
+import Image from 'next/image';
+import { Plus, Edit, Trash2, LogOut, LayoutDashboard, ImageIcon, MapPin, Euro } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { requireAdminSession } from '@/lib/admin-auth';
 import { deleteAnnuncioAction, logoutAction } from './actions';
@@ -32,104 +33,164 @@ export default async function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-secondary">Gestione Annunci</h1>
-            <p className="text-sm text-secondary/70 mt-1">Accesso come {session.user.email}</p>
+    <div className="min-h-screen bg-white">
+      {/* Header moderno */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-primary/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-6">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary">
+                <LayoutDashboard className="w-5 h-5" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-secondary">Gestione Annunci</h1>
+                <p className="text-sm text-secondary/60">{session.user.email}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin/nuovo"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-sm transition-colors shadow-sm shadow-primary/20"
+              >
+                <Plus className="w-4 h-4" />
+                Nuovo Annuncio
+              </Link>
+              <form action={logoutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-primary/15 text-secondary/75 hover:bg-primary/5 hover:text-secondary font-medium text-sm transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Esci
+                </button>
+              </form>
+            </div>
           </div>
-          <div className="flex gap-4">
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {error ? (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 flex items-start gap-4">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+              <span className="text-red-600 text-lg">!</span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-red-800">Errore nel caricamento</h3>
+              <p className="text-sm text-red-700 mt-1">Si è verificato un errore nel caricamento degli annunci. Verifica la configurazione Supabase.</p>
+            </div>
+          </div>
+        ) : !annunci || annunci.length === 0 ? (
+          <div className="text-center py-20 rounded-3xl border-2 border-dashed border-primary/20 bg-primary/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 text-primary mb-6">
+              <ImageIcon className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-semibold text-secondary mb-2">Nessun annuncio</h2>
+            <p className="text-secondary/70 mb-8 max-w-sm mx-auto">Inizia aggiungendo il tuo primo annuncio immobiliare.</p>
             <Link
               href="/admin/nuovo"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold transition-colors"
             >
-              <Plus className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-              Nuovo Annuncio
+              <Plus className="w-4 h-4" />
+              Crea annuncio
             </Link>
-            <form action={logoutAction}>
-              <button
-                className="inline-flex items-center px-4 py-2 border border-secondary/20 rounded-md shadow-sm text-sm font-medium text-secondary bg-white hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {annunci.map((annuncio: Annuncio, i: number) => (
+              <article
+                key={annuncio.id}
+                className="group bg-white rounded-2xl border border-primary/10 overflow-hidden hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 animate-fade-in"
+                style={{ animationDelay: `${i * 50}ms` }}
               >
-                <LogOut className="-ml-1 mr-2 h-5 w-5 text-secondary/60" aria-hidden="true" />
-                Esci
-              </button>
-            </form>
-          </div>
-        </div>
+                <div className="relative aspect-[4/3] bg-primary/5">
+                  {annuncio.immagine_url ? (
+                    <Image
+                      src={annuncio.immagine_url}
+                      alt={annuncio.titolo}
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-primary/50">
+                      <ImageIcon className="w-12 h-12" />
+                    </div>
+                  )}
+                  <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold uppercase tracking-wider ${
+                      annuncio.tipo_contratto === 'IN VENDITA' ? 'bg-primary text-white' : 'bg-secondary text-white'
+                    }`}>
+                      {annuncio.tipo_contratto}
+                    </span>
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${
+                      annuncio.stato === 'DISPONIBILE'
+                        ? 'bg-white/95 text-secondary'
+                        : annuncio.stato === 'IN TRATTATIVA'
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-black/60 text-white'
+                    }`}>
+                      {annuncio.stato}
+                    </span>
+                  </div>
+                </div>
 
-        <div className="bg-white shadow-sm rounded-lg overflow-hidden border border-secondary/20">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary/15">
-              <thead className="bg-primary/5">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
-                    Titolo
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
-                    Località
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
-                    Contratto/Stato
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
-                    Prezzo
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-secondary/70 uppercase tracking-wider">
-                    Mq/Locali
-                  </th>
-                  <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Azioni</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-secondary/10">
-                {annunci?.map((annuncio: Annuncio) => (
-                  <tr key={annuncio.id} className="hover:bg-primary/5">
-                    <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-secondary">{annuncio.titolo}</div>
-                      <div className="text-xs text-secondary/65 mt-1">{annuncio.tipologia_immobile}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-secondary">{annuncio.comune}</div>
-                      <div className="text-xs text-secondary/65">{annuncio.indirizzo}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary/65">
-                      <div className="text-sm text-secondary">{annuncio.tipo_contratto}</div>
-                      <div className="text-xs text-secondary/65">{annuncio.stato}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary/70">
-                      {formatPrice(annuncio.prezzo)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary/70">
-                      {annuncio.superficie_mq} mq • {annuncio.numero_locali} locali
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end gap-3">
-                        <Link href={`/admin/modifica/${annuncio.id}`} className="text-primary hover:text-primary/80">
-                          <Edit className="h-5 w-5" />
-                        </Link>
-                        <form action={deleteAnnuncioAction}>
-                          <input type="hidden" name="id" value={annuncio.id} />
-                          <button className="text-primary/75 hover:text-primary">
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </form>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {(!annunci || annunci.length === 0) && (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-secondary/65">
-                      Nessun annuncio presente. Clicca su "Nuovo Annuncio" per iniziare.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                <div className="p-5">
+                  <h3 className="font-semibold text-secondary line-clamp-2 mb-2 min-h-[2.5rem]">
+                    {annuncio.titolo}
+                  </h3>
+                  <div className="flex items-center gap-1.5 text-sm text-secondary/70 mb-3">
+                    <MapPin className="w-4 h-4 flex-shrink-0" />
+                    <span className="line-clamp-1">{annuncio.comune} · {annuncio.indirizzo}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-lg font-bold text-primary mb-4">
+                    <Euro className="w-4 h-4" />
+                    {formatPrice(annuncio.prezzo)}
+                    {annuncio.tipo_contratto === 'IN AFFITTO' && (
+                      <span className="text-sm font-normal text-secondary/60">/mese</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-secondary/70 mb-5">
+                    <span>{annuncio.superficie_mq} mq</span>
+                    <span>·</span>
+                    <span>{annuncio.numero_locali} locali</span>
+                  </div>
+
+                  <div className="flex items-center gap-4 pt-4 border-t border-primary/10">
+                    <Link
+                      href={`/vetrina/${annuncio.id}`}
+                      target="_blank"
+                      className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                    >
+                      Visualizza
+                    </Link>
+                    <Link
+                      href={`/admin/modifica/${annuncio.id}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 font-medium text-sm transition-colors"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Modifica
+                    </Link>
+                    <form action={deleteAnnuncioAction} className="ml-auto">
+                      <input type="hidden" name="id" value={annuncio.id} />
+                      <button
+                        type="submit"
+                        onClick={(e) => {
+                          if (!confirm('Eliminare questo annuncio?')) e.preventDefault();
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 font-medium text-sm transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Elimina
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

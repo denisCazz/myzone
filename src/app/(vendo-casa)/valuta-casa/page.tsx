@@ -94,18 +94,20 @@ export default function ValutaCasa() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full bg-white p-8 rounded-2xl border border-primary/15 shadow-sm text-center">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-green-500 mb-6" />
-          <h2 className="text-3xl font-bold text-secondary mb-4">Richiesta Inviata!</h2>
-          <p className="text-secondary/80 mb-8">
+      <div className="min-h-[70vh] flex items-center justify-center bg-white py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full bg-white p-10 rounded-3xl border border-primary/15 shadow-xl shadow-primary/10 text-center">
+          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="h-10 w-10 text-green-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-secondary mb-4">Richiesta Inviata!</h2>
+          <p className="text-secondary/80 mb-8 leading-relaxed">
             Grazie per averci contattato. Un nostro consulente ti ricontatterà al più presto per fissare un appuntamento per la valutazione del tuo immobile.
           </p>
           <button
             onClick={() => setIsSuccess(false)}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+            className="w-full flex justify-center py-3.5 px-4 rounded-xl font-semibold text-white bg-primary hover:bg-primary/90 transition-all btn-glow"
           >
-            Invia un'altra richiesta
+            Invia un&apos;altra richiesta
           </button>
         </div>
       </div>
@@ -113,12 +115,12 @@ export default function ValutaCasa() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        <div className="rounded-3xl border border-primary/15 bg-white p-8 md:p-10 mb-10">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-3">Vendere con Myzone</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary mb-4">Valuta la tua casa</h1>
-          <p className="text-lg text-secondary/80 max-w-3xl">
+        <div className="rounded-3xl border border-primary/10 bg-white p-10 md:p-12 mb-10 shadow-lg shadow-primary/10">
+          <p className="text-xs uppercase tracking-[0.25em] text-primary font-bold mb-3">Vendere con Myzone</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-secondary mb-4 tracking-tight">Valuta la tua casa</h1>
+          <p className="text-lg text-secondary/80 max-w-3xl leading-relaxed">
             Richiedi una valutazione professionale e senza impegno. Ti ricontattiamo con una stima coerente con il mercato locale e una strategia di vendita concreta.
           </p>
         </div>
@@ -142,7 +144,7 @@ export default function ValutaCasa() {
             />
           </aside>
 
-          <div className="bg-white py-8 px-6 border border-primary/15 shadow-sm rounded-2xl sm:px-10">
+          <div className="bg-white py-8 px-6 border border-primary/10 shadow-lg shadow-primary/10 rounded-2xl sm:px-10">
             <form
               onSubmit={handleSubmit}
               className="space-y-6 [&_input]:text-secondary [&_input]:bg-white [&_input]:placeholder:text-secondary/45 [&_select]:text-secondary [&_select]:bg-white [&_textarea]:text-secondary [&_textarea]:bg-white [&_textarea]:placeholder:text-secondary/45"
@@ -160,8 +162,8 @@ export default function ValutaCasa() {
                       value={formData.nome}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.nome ? 'border-red-300' : 'border-primary/30'
-                      } rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                        errors.nome ? 'border-red-300' : 'border-primary/15'
+                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                     />
                     {errors.nome && <p className="mt-2 text-sm text-red-600">{errors.nome}</p>}
                   </div>
@@ -179,8 +181,8 @@ export default function ValutaCasa() {
                       value={formData.cognome}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.cognome ? 'border-red-300' : 'border-primary/30'
-                      } rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                        errors.cognome ? 'border-red-300' : 'border-primary/15'
+                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                     />
                     {errors.cognome && <p className="mt-2 text-sm text-red-600">{errors.cognome}</p>}
                   </div>
@@ -198,8 +200,8 @@ export default function ValutaCasa() {
                       value={formData.email}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.email ? 'border-red-300' : 'border-primary/30'
-                      } rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                        errors.email ? 'border-red-300' : 'border-primary/15'
+                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                     />
                     {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
                   </div>
@@ -217,8 +219,8 @@ export default function ValutaCasa() {
                       value={formData.telefono}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.telefono ? 'border-red-300' : 'border-primary/30'
-                      } rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                        errors.telefono ? 'border-red-300' : 'border-primary/15'
+                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                     />
                     {errors.telefono && <p className="mt-2 text-sm text-red-600">{errors.telefono}</p>}
                   </div>
@@ -237,8 +239,8 @@ export default function ValutaCasa() {
                       onChange={handleChange}
                       placeholder="Es. Via Roma 1"
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.indirizzo ? 'border-red-300' : 'border-primary/30'
-                      } rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                        errors.indirizzo ? 'border-red-300' : 'border-primary/15'
+                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                     />
                     {errors.indirizzo && <p className="mt-2 text-sm text-red-600">{errors.indirizzo}</p>}
                   </div>
@@ -257,8 +259,8 @@ export default function ValutaCasa() {
                       onChange={handleChange}
                       placeholder="Es. Cavallermaggiore"
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.comune ? 'border-red-300' : 'border-primary/30'
-                      } rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                        errors.comune ? 'border-red-300' : 'border-primary/15'
+                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
                     />
                     {errors.comune && <p className="mt-2 text-sm text-red-600">{errors.comune}</p>}
                   </div>
@@ -275,7 +277,7 @@ export default function ValutaCasa() {
                       value={formData.tipologia}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.tipologia ? 'border-red-300' : 'border-primary/30'
+                        errors.tipologia ? 'border-red-300' : 'border-primary/15'
                       } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white`}
                     >
                       <option value="">Seleziona</option>
@@ -300,7 +302,7 @@ export default function ValutaCasa() {
                       value={formData.statoImmobile}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.statoImmobile ? 'border-red-300' : 'border-primary/30'
+                        errors.statoImmobile ? 'border-red-300' : 'border-primary/15'
                       } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white`}
                     >
                       <option value="">Seleziona</option>
@@ -325,7 +327,7 @@ export default function ValutaCasa() {
                       value={formData.metratura}
                       onChange={handleChange}
                       placeholder="Es. 120"
-                      className="appearance-none block w-full px-3 py-2 border border-primary/30 rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      className="appearance-none block w-full px-3 py-2 border border-primary/15 rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                     />
                   </div>
                 </div>
@@ -341,7 +343,7 @@ export default function ValutaCasa() {
                       value={formData.tempistiche}
                       onChange={handleChange}
                       className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.tempistiche ? 'border-red-300' : 'border-primary/30'
+                        errors.tempistiche ? 'border-red-300' : 'border-primary/15'
                       } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white`}
                     >
                       <option value="">Seleziona</option>
@@ -366,7 +368,7 @@ export default function ValutaCasa() {
                       value={formData.note}
                       onChange={handleChange}
                       placeholder="Inserisci qui eventuali dettagli sull'immobile (piano, ascensore, stato di manutenzione, ecc.)"
-                      className="appearance-none block w-full px-3 py-2 border border-primary/30 rounded-md shadow-sm placeholder-primary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      className="appearance-none block w-full px-3 py-2 border border-primary/15 rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                     />
                   </div>
                 </div>
@@ -376,7 +378,7 @@ export default function ValutaCasa() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors ${
+                  className={`w-full flex justify-center py-3.5 px-4 rounded-xl font-bold text-white bg-primary hover:bg-primary/90 transition-all btn-glow ${
                     isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                 >
@@ -401,10 +403,10 @@ function ValueCard({
   text: string;
 }) {
   return (
-    <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
-      <Icon className="w-5 h-5 text-primary mb-3" />
-      <h3 className="font-semibold text-secondary mb-1">{title}</h3>
-      <p className="text-sm text-secondary/75">{text}</p>
+    <div className="rounded-2xl border border-primary/10 bg-white p-6 shadow-md shadow-primary/10 hover:border-primary/20 hover:shadow-lg transition-all">
+      <Icon className="w-6 h-6 text-primary mb-3" />
+      <h3 className="font-bold text-secondary mb-2">{title}</h3>
+      <p className="text-sm text-secondary/80 leading-relaxed">{text}</p>
     </div>
   );
 }

@@ -10,8 +10,8 @@ export default async function Vetrina() {
 
   if (!supabase) {
     return (
-      <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto bg-white border border-primary/20 rounded-2xl p-8 text-center">
+      <div className="min-h-screen bg-white py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto bg-white rounded-3xl border border-primary/15 p-10 text-center shadow-lg">
           <h1 className="text-2xl font-bold text-secondary mb-3">Configurazione Supabase mancante</h1>
           <p className="text-secondary/80">
             Imposta <strong>NEXT_PUBLIC_SUPABASE_URL</strong> e <strong>NEXT_PUBLIC_SUPABASE_ANON_KEY</strong> nel file <strong>.env.local</strong>.
@@ -21,7 +21,6 @@ export default async function Vetrina() {
     );
   }
 
-  // Fetch data from Supabase
   const { data: annunci, error } = await supabase
     .from('annunci')
     .select('*')
@@ -31,7 +30,6 @@ export default async function Vetrina() {
     console.error('Error fetching annunci:', error);
   }
 
-  // Format price to EUR
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -41,66 +39,70 @@ export default async function Vetrina() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-14 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 rounded-3xl border border-primary/15 p-8 md:p-10 bg-white">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-3">Selezione Myzone</p>
-          <h1 className="text-4xl font-bold text-secondary mb-4">Vetrina Immobili</h1>
-          <p className="text-lg text-secondary/80 max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-block mb-4">
+            <span className="text-xs uppercase tracking-[0.3em] text-primary font-bold">Selezione Myzone</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary mb-5 tracking-tight">
+            Vetrina Immobili
+          </h1>
+          <p className="text-lg text-secondary/80 max-w-2xl mx-auto leading-relaxed">
             Scopri le nostre migliori proposte immobiliari a Cavallermaggiore e dintorni.
           </p>
         </div>
 
         {error ? (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-8">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">
-                  Si è verificato un errore nel caricamento degli annunci. Riprova più tardi.
-                </p>
-              </div>
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-8 mb-8 flex items-start gap-5 shadow-sm">
+            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center text-red-600 text-xl font-bold">!</div>
+            <div>
+              <p className="font-bold text-red-800 text-lg">Errore nel caricamento</p>
+              <p className="text-red-700 mt-1">Si è verificato un errore nel caricamento degli annunci. Riprova più tardi.</p>
             </div>
           </div>
         ) : !annunci || annunci.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-primary/10">
-            <p className="text-primary/70 text-lg">Nessun annuncio disponibile al momento.</p>
+          <div className="text-center py-24 rounded-3xl border-2 border-dashed border-primary/20 bg-primary/5">
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+              <MapPin className="w-10 h-10 text-primary" />
+            </div>
+            <p className="text-secondary/80 text-lg font-medium">Nessun annuncio disponibile al momento.</p>
+            <p className="text-secondary/60 text-sm mt-2">Torna a controllare presto per nuove proposte.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {annunci.map((annuncio: Annuncio) => (
-              <div key={annuncio.id} className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-primary/15 overflow-hidden flex flex-col hover:-translate-y-1">
-                {/* Image */}
-                <div className="relative h-64 w-full bg-primary/10">
+            {annunci.map((annuncio: Annuncio, i: number) => (
+              <article
+                key={annuncio.id}
+                className="group bg-white rounded-2xl overflow-hidden flex flex-col shadow-md shadow-primary/10 border border-primary/10 hover-lift animate-fade-in"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <div className="relative h-72 w-full bg-primary/5 overflow-hidden">
                   {annuncio.immagine_url ? (
                     <Image
                       src={annuncio.immagine_url}
                       alt={annuncio.titolo}
                       unoptimized
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-primary/60">
-                      Nessuna immagine
+                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+                      <span className="text-primary/60 text-sm">Nessuna immagine</span>
                     </div>
                   )}
-                  <div className="absolute top-4 left-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-white ${
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                    <span className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-lg ${
                       annuncio.tipo_contratto === 'IN VENDITA' ? 'bg-primary' : 'bg-secondary'
                     }`}>
                       {annuncio.tipo_contratto}
                     </span>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                    <span className={`px-3 py-1.5 rounded-xl text-xs font-semibold shadow-md ${
                       annuncio.stato === 'DISPONIBILE'
-                        ? 'bg-white text-secondary'
+                        ? 'bg-white/95 text-secondary'
                         : annuncio.stato === 'IN TRATTATIVA'
                         ? 'bg-amber-100 text-amber-800'
                         : 'bg-black/70 text-white'
@@ -110,32 +112,33 @@ export default async function Vetrina() {
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-6 flex-grow flex flex-col">
-                  <h3 className="text-xl font-bold text-secondary mb-2 line-clamp-2 min-h-[3.5rem]">
+                  <h3 className="text-xl font-bold text-secondary mb-3 line-clamp-2 min-h-[3.5rem] leading-snug">
                     {annuncio.titolo}
                   </h3>
 
-                  <div className="flex items-start gap-2 text-secondary/75 text-sm mb-3">
-                    <MapPin className="w-4 h-4 mt-0.5" />
+                  <div className="flex items-start gap-2 text-secondary/75 text-sm mb-4">
+                    <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary" />
                     <p className="line-clamp-2">
                       {annuncio.provincia} · {annuncio.comune} · {annuncio.indirizzo}
                     </p>
                   </div>
-                  
-                  <div className="text-2xl font-bold text-primary mb-4">
+
+                  <div className="text-2xl font-bold text-primary mb-5">
                     {formatPrice(annuncio.prezzo)}
-                    {annuncio.tipo_contratto === 'IN AFFITTO' && <span className="text-sm text-primary/70 font-normal">/mese</span>}
+                    {annuncio.tipo_contratto === 'IN AFFITTO' && (
+                      <span className="text-sm text-secondary/60 font-normal ml-1">/mese</span>
+                    )}
                   </div>
 
-                  <div className="flex items-center gap-4 text-secondary/80 mb-6 border-t border-b border-primary/15 py-4">
-                    <div className="flex items-center gap-1">
-                      <Maximize className="w-4 h-4" />
-                      <span className="text-sm font-medium">{annuncio.superficie_mq} mq</span>
+                  <div className="flex items-center gap-6 text-secondary/75 mb-6 py-4 border-y border-primary/10">
+                    <div className="flex items-center gap-2">
+                      <Maximize className="w-5 h-5 text-primary" />
+                      <span className="text-sm font-semibold">{annuncio.superficie_mq} mq</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Bed className="w-4 h-4" />
-                      <span className="text-sm font-medium">{annuncio.numero_locali} locali</span>
+                    <div className="flex items-center gap-2">
+                      <Bed className="w-5 h-5 text-primary" />
+                      <span className="text-sm font-semibold">{annuncio.numero_locali} locali</span>
                     </div>
                   </div>
 
@@ -146,18 +149,18 @@ export default async function Vetrina() {
                     </div>
                   )}
 
-                  <p className="text-secondary/80 text-sm line-clamp-3 mb-6 flex-grow">
+                  <p className="text-secondary/75 text-sm line-clamp-3 mb-6 flex-grow leading-relaxed">
                     {annuncio.descrizione}
                   </p>
 
-                  <Link 
+                  <Link
                     href={`/vetrina/${annuncio.id}`}
-                    className="block w-full text-center bg-secondary text-white hover:bg-primary font-medium py-2.5 rounded-lg transition-colors border border-secondary hover:border-primary"
+                    className="block w-full text-center bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all btn-glow"
                   >
-                    Dettagli
+                    Vedi dettagli
                   </Link>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         )}

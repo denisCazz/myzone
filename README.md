@@ -36,6 +36,19 @@ npm run dev
 2. Esegui lo script in [supabase/schema.sql](supabase/schema.sql).
 3. Verifica che la tabella `public.annunci` sia stata creata.
 
+## Setup Supabase Storage (upload immagini)
+
+Per caricare le immagini degli annunci dal PC:
+
+1. Vai su **Supabase Dashboard** → **Storage**.
+2. Clicca **New bucket**.
+3. Nome bucket: `annunci-images`.
+4. Imposta **Public bucket** (le immagini saranno accessibili pubblicamente).
+5. Clicca **Create bucket**.
+6. Nella policy del bucket, assicurati che il service role possa scrivere (di default con service role key l’upload funziona).
+
+Formati supportati: JPG, PNG, WebP (max 5MB).
+
 Campi principali:
 
 - `id`

@@ -2,7 +2,19 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #111111;
+  --foreground: #0f0f0f;
+  --muted: #6b7280;
+  --border: #f0e6e8;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --primary: #a13644;
+  --primary-light: #c45a68;
+  --primary-dark: #8a2d39;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 12px 40px rgb(0 0 0 / 0.08);
+  --shadow-xl: 0 24px 60px rgb(0 0 0 / 0.1);
 }
 
 @theme inline {
@@ -10,8 +22,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-primary: #a13644;
-  --color-secondary: #111111;
+  --color-primary: var(--primary);
+  --color-secondary: #0f0f0f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,10 +36,68 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
   background: #a13644;
   color: #ffffff;
+}
+
+/* Animazioni fluide */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+
+/* Card con effetto hover premium */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px -15px rgb(161 54 68 / 0.15), 0 10px 30px -15px rgb(0 0 0 / 0.08);
+}
+
+/* Bottone con glow sottile */
+.btn-glow:hover {
+  box-shadow: 0 0 0 1px rgb(161 54 68 / 0.2), 0 8px 25px -5px rgb(161 54 68 / 0.25);
+}
+
+/* Focus ring accessibile */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid #a13644;
+  outline-offset: 2px;
 }

@@ -25,14 +25,17 @@ export default function AdminLoginPage() {
   const [state, formAction] = useActionState(loginAction, initialState);
 
   return (
-    <div className="min-h-screen bg-white py-14 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-secondary mb-2">Area Admin</h1>
-          <p className="text-secondary/75">Accedi per gestire gli annunci immobiliari.</p>
+    <div className="min-h-screen bg-white flex items-center justify-center py-14 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary mb-6 font-bold text-xl">
+            🔐
+          </div>
+          <h1 className="text-2xl font-bold text-secondary mb-2">Area Admin</h1>
+          <p className="text-secondary/70">Accedi per gestire gli annunci immobiliari.</p>
         </div>
 
-        <div className="bg-white border border-primary/20 rounded-2xl shadow-sm p-8">
+        <div className="bg-white border border-primary/15 rounded-2xl shadow-sm p-8">
           <form action={formAction} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-secondary mb-1">
@@ -43,7 +46,7 @@ export default function AdminLoginPage() {
                 name="email"
                 type="email"
                 required
-                className="w-full px-3 py-2 border border-secondary/20 rounded-lg text-secondary bg-white placeholder:text-secondary/45 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+                className="w-full px-3 py-2.5 border border-primary/15 rounded-xl text-secondary bg-white placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
               />
             </div>
 
@@ -56,12 +59,14 @@ export default function AdminLoginPage() {
                 name="password"
                 type="password"
                 required
-                className="w-full px-3 py-2 border border-secondary/20 rounded-lg text-secondary bg-white placeholder:text-secondary/45 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+                className="w-full px-3 py-2.5 border border-primary/15 rounded-xl text-secondary bg-white placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
               />
             </div>
 
             {state.error && (
-              <p className="text-sm text-red-600">{state.error}</p>
+              <div className="rounded-xl border border-red-200 bg-red-50 p-3">
+                <p className="text-sm text-red-700">{state.error}</p>
+              </div>
             )}
 
             <SubmitButton />
@@ -69,7 +74,7 @@ export default function AdminLoginPage() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link href="/" className="text-secondary/80 hover:text-primary">
+          <Link href="/" className="text-secondary/70 hover:text-primary font-medium text-sm transition-colors">
             Torna alla home
           </Link>
         </div>
