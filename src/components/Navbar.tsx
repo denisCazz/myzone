@@ -17,19 +17,19 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-primary/10 shadow-sm shadow-primary/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingLeft: "max(1rem, env(safe-area-inset-left))", paddingRight: "max(1rem, env(safe-area-inset-right))" }}>
         <div className="flex justify-between h-[72px]">
           <Link
             href="/"
             className="flex items-center gap-3 group"
           >
-            <div className="relative">
+            <div className="relative w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden border-2 border-primary/20 shadow-md group-hover:border-primary/40 transition-colors">
               <Image
                 src="/favicon.jpeg"
                 alt="Logo Myzone"
                 width={48}
                 height={48}
-                className="rounded-xl border-2 border-primary/20 shadow-md group-hover:border-primary/40 transition-colors"
+                className="rounded-xl object-cover w-full h-full"
               />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
