@@ -2,10 +2,11 @@ import { getSupabaseAdminClient } from '@/lib/supabase-admin';
 import { Annuncio } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Plus, Edit, Trash2, LogOut, LayoutDashboard, ImageIcon, MapPin, Euro } from 'lucide-react';
+import { Plus, Edit, LogOut, LayoutDashboard, ImageIcon, MapPin, Euro } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { requireAdminSession } from '@/lib/admin-auth';
 import { deleteAnnuncioAction, logoutAction } from './actions';
+import DeleteAnnuncioButton from './DeleteAnnuncioButton';
 
 export default async function AdminDashboard() {
   const session = await requireAdminSession();
@@ -35,7 +36,7 @@ export default async function AdminDashboard() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header moderno */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-primary/10">
+      <header className="sticky top-0 z-40 bg-white border-b border-primary/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-6">
             <div className="flex items-center gap-3">
@@ -172,19 +173,7 @@ export default async function AdminDashboard() {
                       <Edit className="w-4 h-4" />
                       Modifica
                     </Link>
-                    <form action={deleteAnnuncioAction} className="ml-auto">
-                      <input type="hidden" name="id" value={annuncio.id} />
-                      <button
-                        type="submit"
-                        onClick={(e) => {
-                          if (!confirm('Eliminare questo annuncio?')) e.preventDefault();
-                        }}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 font-medium text-sm transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        Elimina
-                      </button>
-                    </form>
+                    <DeleteAnnuncioButton id={annuncio.id} deleteAction={deleteAnnuncioAction} />
                   </div>
                 </div>
               </article>

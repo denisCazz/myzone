@@ -1,20 +1,38 @@
 import { getSupabaseServerClient } from '@/lib/supabase-server';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Bed, Maximize, Euro, MapPin, Calendar, Building2, Phone, Mail, Bath, Trees, Building } from 'lucide-react';
+import { ArrowLeft, Bed, Maximize, Euro, MapPin, Calendar, Building2, Phone, Mail, Bath, Trees, Building, ChevronRight } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { siteConfig } from '@/lib/site-config';
+import type { Metadata } from 'next';
 
-export default async function DettaglioAnnuncio({ params }: { params: { id: string } }) {
+type Props = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return { title: 'Annuncio' };
+  const { data } = await supabase.from('annunci').select('titolo, prezzo, comune').eq('id', id).single();
+  if (!data) return { title: 'Annuncio' };
+  const price = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(data.prezzo);
+  return {
+    title: `${data.titolo} | ${siteConfig.name}`,
+    description: `Immobile a ${data.comune} - ${price}. Scopri i dettagli su ${siteConfig.name}.`,
+  };
+}
+
+export default async function DettaglioAnnuncio({ params }: Props) {
   const supabase = getSupabaseServerClient();
 
   if (!supabase) {
     notFound();
   }
 
+  const { id } = await params;
   const { data: annuncio, error } = await supabase
     .from('annunci')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (error || !annuncio) {
@@ -30,15 +48,23 @@ export default async function DettaglioAnnuncio({ params }: { params: { id: stri
   };
 
   const prezzoAlMq = Math.round(annuncio.prezzo / Math.max(annuncio.superficie_mq || 1, 1));
+  const telefono = annuncio.agenzia_telefono || siteConfig.phone;
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header con hero */}
       <div className="bg-white border-b border-primary/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <nav className="flex items-center gap-2 text-sm text-secondary/70 mb-6">
+            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+            <ChevronRight className="w-4 h-4" />
+            <Link href="/vetrina" className="hover:text-primary transition-colors">Vetrina</Link>
+            <ChevronRight className="w-4 h-4" />
+            <span className="text-secondary/50 truncate max-w-[180px] sm:max-w-xs">{annuncio.titolo}</span>
+          </nav>
           <Link
             href="/vetrina"
-            className="inline-flex items-center gap-2 text-secondary/75 hover:text-primary font-medium text-sm transition-colors mb-6 px-3 py-2 rounded-lg hover:bg-primary/5"
+            className="inline-flex items-center gap-2 text-secondary/75 hover:text-primary font-medium text-sm transition-colors px-3 py-2 rounded-lg hover:bg-primary/5"
           >
             <ArrowLeft className="w-4 h-4" />
             Torna alla vetrina
@@ -212,13 +238,13 @@ export default async function DettaglioAnnuncio({ params }: { params: { id: stri
               <p className="text-secondary/75 text-sm mb-5">Contattaci per maggiori informazioni o per fissare una visita.</p>
               <div className="space-y-3">
                 <a
-                  href="tel:+390000000000"
+                  href={`tel:${telefono.replace(/\s/g, '')}`}
                   className="block w-full text-center bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all btn-glow"
                 >
                   Chiama Ora
                 </a>
                 <a
-                  href={`mailto:ufficio@myzone.casa?subject=Richiesta info per: ${annuncio.titolo}`}
+                  href={`mailto:${annuncio.agenzia_email || siteConfig.email}?subject=Richiesta info per: ${encodeURIComponent(annuncio.titolo)}`}
                   className="block w-full text-center bg-white text-secondary border-2 border-primary/15 hover:border-primary/30 hover:bg-primary/5 font-semibold py-3 rounded-xl transition-colors"
                 >
                   Invia Email

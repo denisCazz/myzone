@@ -2,6 +2,7 @@
 
 import { useState, type ChangeEvent, type ComponentType } from 'react';
 import { CheckCircle2, Home, Clock3, ShieldCheck } from 'lucide-react';
+import PageHero from '@/components/PageHero';
 
 export default function ValutaCasa() {
   const [formData, setFormData] = useState({
@@ -115,16 +116,14 @@ export default function ValutaCasa() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-14 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="rounded-3xl border border-primary/10 bg-white p-10 md:p-12 mb-10 shadow-lg shadow-primary/10">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary font-bold mb-3">Vendere con Myzone</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary mb-4 tracking-tight">Valuta la tua casa</h1>
-          <p className="text-lg text-secondary/80 max-w-3xl leading-relaxed">
-            Richiedi una valutazione professionale e senza impegno. Ti ricontattiamo con una stima coerente con il mercato locale e una strategia di vendita concreta.
-          </p>
-        </div>
+    <div className="min-h-screen bg-white">
+      <PageHero
+        badge="Vendere con Myzone"
+        title="Valuta la tua casa"
+        subtitle="Richiedi una valutazione professionale e senza impegno. Ti ricontattiamo con una stima coerente con il mercato locale."
+      />
 
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-[1.1fr_1.6fr] gap-8">
           <aside className="space-y-4">
             <ValueCard
@@ -161,9 +160,9 @@ export default function ValutaCasa() {
                       id="nome"
                       value={formData.nome}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.nome ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.nome ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm`}
                     />
                     {errors.nome && <p className="mt-2 text-sm text-red-600">{errors.nome}</p>}
                   </div>
@@ -180,9 +179,9 @@ export default function ValutaCasa() {
                       id="cognome"
                       value={formData.cognome}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.cognome ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.cognome ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm`}
                     />
                     {errors.cognome && <p className="mt-2 text-sm text-red-600">{errors.cognome}</p>}
                   </div>
@@ -199,9 +198,9 @@ export default function ValutaCasa() {
                       id="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.email ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.email ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm`}
                     />
                     {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
                   </div>
@@ -218,9 +217,9 @@ export default function ValutaCasa() {
                       id="telefono"
                       value={formData.telefono}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.telefono ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.telefono ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm`}
                     />
                     {errors.telefono && <p className="mt-2 text-sm text-red-600">{errors.telefono}</p>}
                   </div>
@@ -238,9 +237,9 @@ export default function ValutaCasa() {
                       value={formData.indirizzo}
                       onChange={handleChange}
                       placeholder="Es. Via Roma 1"
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.indirizzo ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.indirizzo ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm`}
                     />
                     {errors.indirizzo && <p className="mt-2 text-sm text-red-600">{errors.indirizzo}</p>}
                   </div>
@@ -258,9 +257,9 @@ export default function ValutaCasa() {
                       value={formData.comune}
                       onChange={handleChange}
                       placeholder="Es. Cavallermaggiore"
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.comune ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.comune ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm`}
                     />
                     {errors.comune && <p className="mt-2 text-sm text-red-600">{errors.comune}</p>}
                   </div>
@@ -276,9 +275,9 @@ export default function ValutaCasa() {
                       id="tipologia"
                       value={formData.tipologia}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.tipologia ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.tipologia ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm bg-white`}
                     >
                       <option value="">Seleziona</option>
                       <option value="APPARTAMENTO">Appartamento</option>
@@ -301,9 +300,9 @@ export default function ValutaCasa() {
                       id="statoImmobile"
                       value={formData.statoImmobile}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.statoImmobile ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.statoImmobile ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm bg-white`}
                     >
                       <option value="">Seleziona</option>
                       <option value="NUOVO">Nuovo</option>
@@ -327,7 +326,7 @@ export default function ValutaCasa() {
                       value={formData.metratura}
                       onChange={handleChange}
                       placeholder="Es. 120"
-                      className="appearance-none block w-full px-3 py-2 border border-primary/15 rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      className="block w-full px-4 py-3 border border-primary/15 rounded-xl transition-colors hover:border-primary/25 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm"
                     />
                   </div>
                 </div>
@@ -342,9 +341,9 @@ export default function ValutaCasa() {
                       id="tempistiche"
                       value={formData.tempistiche}
                       onChange={handleChange}
-                      className={`appearance-none block w-full px-3 py-2 border ${
-                        errors.tempistiche ? 'border-red-300' : 'border-primary/15'
-                      } rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm bg-white`}
+                      className={`block w-full px-4 py-3 border rounded-xl transition-colors ${
+                        errors.tempistiche ? 'border-red-300 bg-red-50/50' : 'border-primary/15 hover:border-primary/25'
+                      } focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm bg-white`}
                     >
                       <option value="">Seleziona</option>
                       <option value="SUBITO">Subito</option>
@@ -368,7 +367,7 @@ export default function ValutaCasa() {
                       value={formData.note}
                       onChange={handleChange}
                       placeholder="Inserisci qui eventuali dettagli sull'immobile (piano, ascensore, stato di manutenzione, ecc.)"
-                      className="appearance-none block w-full px-3 py-2 border border-primary/15 rounded-md shadow-sm placeholder-secondary/40 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                      className="block w-full px-4 py-3 border border-primary/15 rounded-xl transition-colors hover:border-primary/25 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm"
                     />
                   </div>
                 </div>

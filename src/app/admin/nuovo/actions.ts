@@ -7,9 +7,18 @@ import { getSupabaseAdminClient } from '@/lib/supabase-admin';
 
 const STORAGE_BUCKET = 'annunci-images';
 
-type CreateState = {
+export type CreateState = {
   error: string;
+  formData?: Record<string, string>;
 };
+
+function formDataToObject(formData: FormData): Record<string, string> {
+  const obj: Record<string, string> = {};
+  formData.forEach((value, key) => {
+    if (typeof value === 'string') obj[key] = value;
+  });
+  return obj;
+}
 
 async function uploadImageToStorage(supabase: ReturnType<typeof getSupabaseAdminClient>, file: File): Promise<string | null> {
   if (!file || file.size === 0 || file.size > 5 * 1024 * 1024) return null; // max 5MB
@@ -29,7 +38,7 @@ export async function createAnnuncioAction(_: CreateState, formData: FormData): 
 
   const supabase = getSupabaseAdminClient();
   if (!supabase) {
-    return { error: 'Configurazione server Supabase mancante.' };
+    return { error: 'Configurazione server Supabase mancante.', formData: formDataToObject(formData) };
   }
 
   const titolo = String(formData.get('titolo') || '').trim();
@@ -70,23 +79,25 @@ export async function createAnnuncioAction(_: CreateState, formData: FormData): 
   const ascensore = formData.get('ascensore') === 'on';
 
   if (!titolo || !descrizione || !tipologiaImmobile || !provincia || !comune || !indirizzo) {
-    return { error: 'Compila correttamente i campi obbligatori.' };
+    return { error: 'Compila correttamente i campi obbligatori.', formData: formDataToObject(formData) };
   }
 
   if (!['IN VENDITA', 'IN AFFITTO'].includes(tipoContratto)) {
-    return { error: 'Tipo contratto non valido.' };
+    return { error: 'Tipo contratto non valido.', formData: formDataToObject(formData) };
   }
 
   if (prezzo <= 0) {
-    return { error: 'Il prezzo deve essere maggiore di 0.' };
+    return { error: 'Il prezzo deve essere maggiore di 0.', formData: formDataToObject(formData) };
   }
 
   const superficieMqInt = Math.round(superficieMq) || 0;
+  const tipologia = tipoContratto === 'IN AFFITTO' ? 'affitto' : 'vendita';
   const { error } = await supabase.from('annunci').insert({
     titolo,
     descrizione,
     prezzo,
     categoria,
+    tipologia,
     tipologia_immobile: tipologiaImmobile,
     tipo_contratto: tipoContratto,
     stato,
@@ -119,7 +130,7 @@ export async function createAnnuncioAction(_: CreateState, formData: FormData): 
   if (error) {
     console.error('Supabase insert error:', error);
     const msg = error.message || 'Errore durante il salvataggio annuncio.';
-    return { error: msg };
+    return { error: msg, formData: formDataToObject(formData) };
   }
 
   revalidatePath('/admin');

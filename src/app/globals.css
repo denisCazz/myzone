@@ -33,6 +33,10 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -67,6 +71,12 @@ body {
   100% { background-position: 200% 0; }
 }
 
+@keyframes skeleton {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.4; }
+}
+
 .animate-fade-in {
   animation: fade-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -93,6 +103,14 @@ body {
   box-shadow: 0 0 0 1px rgb(161 54 68 / 0.2), 0 8px 25px -5px rgb(161 54 68 / 0.25);
 }
 
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, rgb(161 54 68 / 0.08) 25%, rgb(161 54 68 / 0.15) 50%, rgb(161 54 68 / 0.08) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+}
+
 /* Focus ring accessibile */
 input:focus-visible,
 select:focus-visible,
@@ -100,4 +118,11 @@ textarea:focus-visible,
 button:focus-visible {
   outline: 2px solid #a13644;
   outline-offset: 2px;
+}
+
+/* Transizioni pagina */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
 }
