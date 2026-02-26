@@ -49,7 +49,7 @@ export default function ServiziPage() {
 
         <div className="mb-14 rounded-3xl overflow-hidden shadow-xl shadow-primary/10 border border-primary/10 hover-lift">
           <div className="bg-gradient-to-r from-secondary via-primary/95 to-primary text-white p-10 md:p-14">
-            <p className="text-sm uppercase tracking-[0.25em] text-white/80 mb-3">Myzone Experience</p>
+            <p className="text-sm uppercase tracking-[0.25em] text-white/80 mb-3">MyZone Experience</p>
             <h2 className="text-2xl md:text-4xl font-bold mb-4 leading-tight">
               Un unico partner, zero stress operativo
             </h2>
@@ -105,7 +105,7 @@ export default function ServiziPage() {
             href="/valuta-casa"
             className="inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-2xl transition-all btn-glow shadow-lg shadow-primary/25"
           >
-            Richiedi Valutazione
+            Valuta subito!
           </Link>
         </div>
       </section>

@@ -1,6 +1,6 @@
 export const siteConfig = {
-  name: "Myzone",
-  tagline: "Agenzia Immobiliare a Cavallermaggiore",
+  name: "MyZone",
+  tagline: "La tua casa, la tua zona",
   images: {
     hero: "/hero.jpg",
     cucina: "/cucina.jpg",
@@ -19,6 +19,7 @@ export const siteConfig = {
   fullAddress: "Via Roma 78, 12030 Cavallermaggiore (CN)",
   email: "ufficio@myzone.casa",
   phone: "+39 0172 123456",
+  vatNumber: "04063560041",
   zone: "Cavallermaggiore e dintorni",
   social: {
     facebook: "https://facebook.com/myzone",

@@ -34,7 +34,7 @@ export default async function Vetrina() {
   return (
     <div className="min-h-screen bg-white">
       <PageHero
-        badge="Selezione Myzone"
+        badge="Selezione MyZone"
         title="Vetrina Immobili"
         subtitle="Scopri le nostre migliori proposte immobiliari a Cavallermaggiore e dintorni."
       />

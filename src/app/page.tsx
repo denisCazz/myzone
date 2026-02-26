@@ -10,7 +10,7 @@ export default function Home() {
       <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center overflow-hidden">
         <Image
           src={siteConfig.images.hero}
-          alt="Sfondo Myzone - Agenzia Immobiliare"
+          alt="Sfondo MyZone - Agenzia Immobiliare"
           fill
           priority
           className="object-cover"
@@ -32,7 +32,8 @@ export default function Home() {
               trova il prossimo capitolo
             </h1>
             <p className="text-base sm:text-lg md:text-xl mb-8 sm:mb-10 text-white leading-relaxed max-w-xl [text-shadow:_0_1px_8px_rgb(0_0_0_/_0.4)]">
-              Myzone ti accompagna con un approccio moderno, trasparente e orientato ai risultati nel mercato di Cavallermaggiore e dintorni.
+              <span className="block font-semibold mb-2">La tua casa, la tua zona.</span>
+              MyZone ti accompagna con un approccio moderno, trasparente e orientato ai risultati nel mercato di Cavallermaggiore e dintorni.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
@@ -94,7 +95,7 @@ export default function Home() {
           <div className="rounded-3xl overflow-hidden shadow-xl shadow-primary/10 border border-primary/10 bg-white">
             <div className="grid lg:grid-cols-5">
               <div className="lg:col-span-2 p-10 md:p-12 bg-gradient-to-br from-secondary via-primary/90 to-primary text-white">
-                <p className="text-xs uppercase tracking-[0.25em] text-white/70 mb-4">Panoramica Myzone</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-white/70 mb-4">Panoramica MyZone</p>
                 <h2 className="text-3xl md:text-4xl font-bold mb-10 leading-tight">
                   Competenza locale, approccio completo
                 </h2>

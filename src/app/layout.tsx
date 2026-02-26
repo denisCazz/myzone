@@ -22,8 +22,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Myzone | Agenzia Immobiliare a Cavallermaggiore",
-  description: "Agenzia immobiliare Myzone a Cavallermaggiore. Vendita, affitto e valutazione immobili.",
+  title: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
+  description: "Agenzia immobiliare MyZone a Cavallermaggiore. Vendita, affitto e valutazione immobili.",
   icons: {
     icon: "/favicon.ico",
   },

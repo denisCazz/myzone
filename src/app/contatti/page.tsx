@@ -4,8 +4,8 @@ import { MapPin, Phone, Mail, Facebook, Instagram, Clock } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata = {
-  title: "Contatti | Myzone",
-  description: "Contatta Myzone - Agenzia Immobiliare a Cavallermaggiore. Indirizzo, telefono, email e social.",
+  title: "Contatti | MyZone",
+  description: "Contatta MyZone - Agenzia Immobiliare a Cavallermaggiore. Indirizzo, telefono, email e social.",
 };
 
 export default function ContattiPage() {
@@ -92,8 +92,18 @@ export default function ContattiPage() {
                     <p className="text-secondary/80">
                       Lun - Ven: 9:00 - 12:30, 15:00 - 19:00
                       <br />
-                      Sabato: su appuntamento
+                      Sabato: 9:00 - 12:30, pomeriggio su appuntamento
                     </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <span className="text-sm font-bold">IVA</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-secondary mb-1">P. IVA</p>
+                    <p className="text-secondary/80">{siteConfig.vatNumber}</p>
                   </div>
                 </div>
               </div>
@@ -135,7 +145,7 @@ export default function ContattiPage() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Mappa - Myzone Cavallermaggiore"
+              title="Mappa - MyZone Cavallermaggiore"
             />
             <div className="p-4 bg-white border-t border-primary/10">
               <a
@@ -156,7 +166,7 @@ export default function ContattiPage() {
             href="/valuta-casa"
             className="inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-bold py-4 px-10 rounded-2xl transition-all btn-glow shadow-lg shadow-primary/25"
           >
-            Richiedi Valutazione
+            Valuta subito!
           </Link>
         </div>
       </section>

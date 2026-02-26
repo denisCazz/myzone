@@ -86,7 +86,7 @@ export default function Footer() {
         </div>
 
         <p className="text-white/60 text-sm">
-          © {new Date().getFullYear()} {siteConfig.name} ·{" "}
+          © {new Date().getFullYear()} {siteConfig.name} · P. IVA {siteConfig.vatNumber} ·{" "}
           <a href="https://bitora.it" target="_blank" rel="noopener noreferrer" className="hover:text-white/80 transition-colors">
             bitora.it
           </a>

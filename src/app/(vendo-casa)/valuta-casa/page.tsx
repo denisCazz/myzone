@@ -22,6 +22,7 @@ export default function ValutaCasa() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -69,9 +70,21 @@ export default function ValutaCasa() {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
+    setSubmitError('');
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch('/api/valuta-casa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Invio non riuscito');
+      }
+
       setIsSuccess(true);
       setFormData({
         nome: '',
@@ -88,6 +101,7 @@ export default function ValutaCasa() {
       });
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmitError('Si è verificato un problema durante l\'invio. Riprova tra qualche minuto.');
     } finally {
       setIsSubmitting(false);
     }
@@ -102,7 +116,7 @@ export default function ValutaCasa() {
           </div>
           <h2 className="text-2xl font-bold text-secondary mb-4">Richiesta Inviata!</h2>
           <p className="text-secondary/80 mb-8 leading-relaxed">
-            Grazie per averci contattato. Un nostro consulente ti ricontatterà al più presto per fissare un appuntamento per la valutazione del tuo immobile.
+            Grazie, verrai contattato subito. Ti abbiamo inviato una mail di conferma della richiesta di valutazione.
           </p>
           <button
             onClick={() => setIsSuccess(false)}
@@ -118,7 +132,7 @@ export default function ValutaCasa() {
   return (
     <div className="min-h-screen bg-white">
       <PageHero
-        badge="Vendere con Myzone"
+        badge="Vendere con MyZone"
         title="Valuta la tua casa"
         subtitle="Richiedi una valutazione professionale e senza impegno. Ti ricontattiamo con una stima coerente con il mercato locale."
       />
@@ -374,6 +388,11 @@ export default function ValutaCasa() {
               </div>
 
               <div className="pt-4">
+                {submitError && (
+                  <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {submitError}
+                  </p>
+                )}
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -381,7 +400,7 @@ export default function ValutaCasa() {
                     isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
                   }`}
                 >
-                  {isSubmitting ? 'Invio in corso...' : 'Richiedi Valutazione'}
+                  {isSubmitting ? 'Invio in corso...' : 'Valuta subito!'}
                 </button>
               </div>
             </form>

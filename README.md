@@ -1,4 +1,4 @@
-## Myzone - Sito Agenzia Immobiliare
+## MyZone - Sito Agenzia Immobiliare
 
 Progetto Next.js (App Router) con Tailwind CSS e integrazione Supabase per la gestione degli annunci immobiliari.
 
@@ -22,6 +22,12 @@ cp .env.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
+SMTP_HOST=...
+SMTP_PORT=587
+SMTP_USER=...
+SMTP_PASS=...
+SMTP_FROM=...
+CONTACT_EMAIL=...
 ```
 
 4. Avvia il progetto:
@@ -65,6 +71,7 @@ Campi principali:
 - La pagina [src/app/vetrina/page.tsx](src/app/vetrina/page.tsx) recupera gli annunci tramite Server Component.
 - Se le variabili Supabase mancano, la pagina mostra un messaggio di configurazione.
 - Le immagini remote degli annunci sono renderizzate con `unoptimized`.
+- Il form [src/app/(vendo-casa)/valuta-casa/page.tsx](src/app/(vendo-casa)/valuta-casa/page.tsx) invia email tramite [src/app/api/valuta-casa/route.ts](src/app/api/valuta-casa/route.ts).
 
 ## Area Admin (auth custom)
 
