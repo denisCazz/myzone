@@ -19,7 +19,7 @@ export const siteConfig = {
   city: "12030 Cavallermaggiore (CN)",
   fullAddress: "Via Roma 78, 12030 Cavallermaggiore (CN)",
   email: "ufficio@myzone.casa",
-  phone: "+39 0172 123456",
+  phone: "3891104491",
   vatNumber: "04063560041",
   zone: "Cavallermaggiore e dintorni",
   social: {
