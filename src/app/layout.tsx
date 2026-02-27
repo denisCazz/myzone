@@ -51,10 +51,10 @@ export const metadata: Metadata = {
       "Vendita, affitto e valutazioni immobiliari a Cavallermaggiore e dintorni con supporto completo e consulenza trasparente.",
     images: [
       {
-        url: siteConfig.images.hero,
+        url: `${siteConfig.url}${siteConfig.images.logo}`,
         width: 1200,
         height: 630,
-        alt: "MyZone - Agenzia immobiliare a Cavallermaggiore",
+        alt: "Logo MyZone - Agenzia immobiliare a Cavallermaggiore",
       },
     ],
   },
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     title: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
     description:
       "Vendita, affitto e valutazioni immobiliari a Cavallermaggiore e dintorni.",
-    images: [siteConfig.images.hero],
+    images: [`${siteConfig.url}${siteConfig.images.logo}`],
   },
   robots: {
     index: true,
