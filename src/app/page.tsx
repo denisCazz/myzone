@@ -1,11 +1,45 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Sparkles, ArrowRight, ShieldCheck, MapPin, BadgeEuro, PhoneCall } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, MapPin, BadgeEuro, PhoneCall, Home as HomeIcon } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Agenzia Immobiliare a Cavallermaggiore e dintorni',
+  description:
+    'Scopri MyZone: annunci in vendita e affitto, valutazioni professionali e consulenza immobiliare a Cavallermaggiore e dintorni.',
+  alternates: {
+    canonical: '/',
+  },
+};
+
+const localBusinessJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: siteConfig.name,
+  image: `${siteConfig.url}${siteConfig.images.logo}`,
+  url: siteConfig.url,
+  email: siteConfig.email,
+  telephone: siteConfig.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: siteConfig.address,
+    addressLocality: 'Cavallermaggiore',
+    addressRegion: 'CN',
+    postalCode: '12030',
+    addressCountry: 'IT',
+  },
+  areaServed: ['Cavallermaggiore', 'dintorni di Cavallermaggiore'],
+  slogan: siteConfig.tagline,
+};
 
 export default function Home() {
   return (
     <div className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
       {/* Hero Section - full-bleed con hero.jpg */}
       <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center overflow-hidden">
         <Image
@@ -31,8 +65,14 @@ export default function Home() {
               <br />
               trova il prossimo capitolo
             </h1>
+            <div className="group mb-7 sm:mb-8 inline-block rounded-2xl border border-white/35 bg-white/10 backdrop-blur-sm px-5 py-3.5 sm:px-6 sm:py-4 shadow-lg shadow-black/20 relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/15 hover:border-white/55 hover:shadow-xl hover:shadow-black/30">
+              <HomeIcon className="absolute right-4 top-3 w-4 h-4 text-white/0 transition-all duration-300 group-hover:text-white/80 group-hover:scale-110" />
+              <p className="text-white text-2xl leading-tight sm:text-3xl md:text-4xl font-extrabold tracking-tight [text-shadow:_0_2px_10px_rgb(0_0_0_/_0.45)] transition-all duration-300 group-hover:[text-shadow:_0_0_14px_rgb(255_255_255_/_0.28),_0_2px_10px_rgb(0_0_0_/_0.45)]">
+                La tua casa, la tua zona.
+              </p>
+              <div className="mt-2 h-[2px] w-24 rounded-full bg-white/75 transition-all duration-300 group-hover:w-40 group-hover:bg-white" />
+            </div>
             <p className="text-base sm:text-lg md:text-xl mb-8 sm:mb-10 text-white leading-relaxed max-w-xl [text-shadow:_0_1px_8px_rgb(0_0_0_/_0.4)]">
-              <span className="block font-semibold mb-2">La tua casa, la tua zona.</span>
               MyZone ti accompagna con un approccio moderno, trasparente e orientato ai risultati nel mercato di Cavallermaggiore e dintorni.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">

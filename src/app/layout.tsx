@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { siteConfig } from "@/lib/site-config";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -22,10 +23,56 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
-  description: "Agenzia immobiliare MyZone a Cavallermaggiore. Vendita, affitto e valutazione immobili.",
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
+    template: "%s | MyZone",
+  },
+  description:
+    "MyZone è l'agenzia immobiliare di riferimento a Cavallermaggiore e dintorni per vendita, affitto e valutazioni immobiliari professionali.",
+  keywords: [
+    "agenzia immobiliare Cavallermaggiore",
+    "case in vendita Cavallermaggiore",
+    "case in affitto Cavallermaggiore",
+    "valutazione casa Cavallermaggiore",
+    "immobiliare dintorni Cavallermaggiore",
+    "MyZone",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "it_IT",
+    url: "/",
+    siteName: siteConfig.name,
+    title: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
+    description:
+      "Vendita, affitto e valutazioni immobiliari a Cavallermaggiore e dintorni con supporto completo e consulenza trasparente.",
+    images: [
+      {
+        url: siteConfig.images.hero,
+        width: 1200,
+        height: 630,
+        alt: "MyZone - Agenzia immobiliare a Cavallermaggiore",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
+    description:
+      "Vendita, affitto e valutazioni immobiliari a Cavallermaggiore e dintorni.",
+    images: [siteConfig.images.hero],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   icons: {
-    icon: "/favicon.ico",
+    icon: [{ url: "/favicon.ico", sizes: "any" }],
+    shortcut: ["/favicon.ico"],
+    apple: ["/favicon.ico"],
   },
 };
 

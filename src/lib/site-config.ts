@@ -1,6 +1,7 @@
 export const siteConfig = {
   name: "MyZone",
   tagline: "La tua casa, la tua zona",
+  url: "https://www.immobiliaremyzone.it",
   images: {
     hero: "/hero.jpg",
     cucina: "/cucina.jpg",
@@ -22,7 +23,7 @@ export const siteConfig = {
   vatNumber: "04063560041",
   zone: "Cavallermaggiore e dintorni",
   social: {
-    facebook: "https://facebook.com/myzone",
-    instagram: "https://instagram.com/myzone",
+    facebook: "https://www.facebook.com/profile.php?id=61579408569162",
+    instagram: "https://www.instagram.com/myzone_agenziaimmobiliare/",
   },
 } as const;

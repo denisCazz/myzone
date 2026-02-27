@@ -63,6 +63,10 @@ export default function VetrinaFiltri({
       maximumFractionDigits: 0,
     }).format(price);
 
+  const fieldBaseClass =
+    "w-full px-3 py-2 border border-primary/15 rounded-xl text-sm text-secondary bg-white placeholder:text-secondary/45 transition-colors hover:border-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary";
+  const selectClass = `${fieldBaseClass} appearance-none`;
+
   return (
     <div className="flex gap-8">
       {/* Sidebar filtri - desktop */}
@@ -89,7 +93,7 @@ export default function VetrinaFiltri({
               <select
                 value={filtri.tipoContratto}
                 onChange={(e) => setFiltri((f) => ({ ...f, tipoContratto: e.target.value }))}
-                className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className={selectClass}
               >
                 <option value="">Tutti</option>
                 <option value="IN VENDITA">In vendita</option>
@@ -105,7 +109,7 @@ export default function VetrinaFiltri({
                   placeholder="€"
                   value={filtri.prezzoMin}
                   onChange={(e) => setFiltri((f) => ({ ...f, prezzoMin: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                  className={fieldBaseClass}
                 />
               </div>
               <div>
@@ -115,7 +119,7 @@ export default function VetrinaFiltri({
                   placeholder="€"
                   value={filtri.prezzoMax}
                   onChange={(e) => setFiltri((f) => ({ ...f, prezzoMax: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                  className={fieldBaseClass}
                 />
               </div>
             </div>
@@ -125,7 +129,7 @@ export default function VetrinaFiltri({
               <select
                 value={filtri.comune}
                 onChange={(e) => setFiltri((f) => ({ ...f, comune: e.target.value }))}
-                className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className={selectClass}
               >
                 <option value="">Tutti</option>
                 {comuni.map((c) => (
@@ -143,7 +147,7 @@ export default function VetrinaFiltri({
                 placeholder="Es. 80"
                 value={filtri.superficieMin}
                 onChange={(e) => setFiltri((f) => ({ ...f, superficieMin: e.target.value }))}
-                className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                className={fieldBaseClass}
               />
             </div>
 
@@ -152,7 +156,7 @@ export default function VetrinaFiltri({
               <select
                 value={filtri.localiMin}
                 onChange={(e) => setFiltri((f) => ({ ...f, localiMin: e.target.value }))}
-                className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                className={selectClass}
               >
                 <option value="">Qualsiasi</option>
                 {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -168,7 +172,7 @@ export default function VetrinaFiltri({
               <select
                 value={filtri.stato}
                 onChange={(e) => setFiltri((f) => ({ ...f, stato: e.target.value }))}
-                className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                className={selectClass}
               >
                 <option value="">Tutti</option>
                 <option value="DISPONIBILE">Disponibile</option>
@@ -185,7 +189,7 @@ export default function VetrinaFiltri({
                 placeholder="Es. Appartamento"
                 value={filtri.tipologia}
                 onChange={(e) => setFiltri((f) => ({ ...f, tipologia: e.target.value }))}
-                className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm focus:ring-2 focus:ring-primary/20"
+                className={fieldBaseClass}
               />
             </div>
           </div>
@@ -226,7 +230,7 @@ export default function VetrinaFiltri({
                 <select
                   value={filtri.tipoContratto}
                   onChange={(e) => setFiltri((f) => ({ ...f, tipoContratto: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={selectClass}
                 >
                   <option value="">Tutti</option>
                   <option value="IN VENDITA">In vendita</option>
@@ -239,7 +243,7 @@ export default function VetrinaFiltri({
                   type="number"
                   value={filtri.prezzoMin}
                   onChange={(e) => setFiltri((f) => ({ ...f, prezzoMin: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={fieldBaseClass}
                 />
               </div>
               <div>
@@ -248,7 +252,7 @@ export default function VetrinaFiltri({
                   type="number"
                   value={filtri.prezzoMax}
                   onChange={(e) => setFiltri((f) => ({ ...f, prezzoMax: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={fieldBaseClass}
                 />
               </div>
               <div>
@@ -256,7 +260,7 @@ export default function VetrinaFiltri({
                 <select
                   value={filtri.comune}
                   onChange={(e) => setFiltri((f) => ({ ...f, comune: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={selectClass}
                 >
                   <option value="">Tutti</option>
                   {comuni.map((c) => (
@@ -272,7 +276,7 @@ export default function VetrinaFiltri({
                   type="number"
                   value={filtri.superficieMin}
                   onChange={(e) => setFiltri((f) => ({ ...f, superficieMin: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={fieldBaseClass}
                 />
               </div>
               <div>
@@ -280,7 +284,7 @@ export default function VetrinaFiltri({
                 <select
                   value={filtri.localiMin}
                   onChange={(e) => setFiltri((f) => ({ ...f, localiMin: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={selectClass}
                 >
                   <option value="">Qualsiasi</option>
                   {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -295,7 +299,7 @@ export default function VetrinaFiltri({
                 <select
                   value={filtri.stato}
                   onChange={(e) => setFiltri((f) => ({ ...f, stato: e.target.value }))}
-                  className="w-full px-3 py-2 border border-primary/15 rounded-xl text-sm"
+                  className={selectClass}
                 >
                   <option value="">Tutti</option>
                   <option value="DISPONIBILE">Disponibile</option>

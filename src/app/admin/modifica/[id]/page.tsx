@@ -5,8 +5,9 @@ import { requireAdminSession } from '@/lib/admin-auth';
 import { getSupabaseAdminClient } from '@/lib/supabase-admin';
 import EditAnnuncioForm from './EditAnnuncioForm';
 
-export default async function ModificaAnnuncioPage({ params }: { params: { id: string } }) {
+export default async function ModificaAnnuncioPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdminSession();
+  const { id } = await params;
 
   const supabase = getSupabaseAdminClient();
   if (!supabase) {
@@ -16,7 +17,7 @@ export default async function ModificaAnnuncioPage({ params }: { params: { id: s
   const { data: annuncio } = await supabase
     .from('annunci')
     .select('id, titolo, descrizione, prezzo, provincia, comune, indirizzo, categoria, tipologia_immobile, tipo_contratto, stato, numero_locali, superficie_mq, piano, bagni, ape, ipe, riscaldamento, tipo_riscaldamento, sistema_radiante, cucina, box, giardino, terrazzo, ascensore, agenzia_nome, agenzia_indirizzo, agenzia_telefono, agenzia_email, immagine_url')
-    .eq('id', params.id)
+    .eq('id', id)
     .single();
 
   if (!annuncio) {
