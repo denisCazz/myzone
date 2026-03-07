@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { updateAnnuncioAction } from './actions';
-import ImageUpload from '@/components/ImageUpload';
+import AnnuncioImagesField from '@/components/AnnuncioImagesField';
+import { getAnnuncioImages } from '@/lib/annuncio-images';
 
 type AnnuncioForm = {
   id: string;
@@ -37,11 +38,23 @@ type AnnuncioForm = {
   agenzia_telefono: string | null;
   agenzia_email: string | null;
   immagine_url: string | null;
+  immagini_urls?: string[] | null;
 };
 
 const initialState: { error: string; formData?: Record<string, string> } = { error: '' };
 
 const inputClass = "mt-1 w-full px-3 py-2.5 border border-primary/15 rounded-xl text-secondary bg-white placeholder:text-secondary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary";
+
+function parseStoredImages(value: string | undefined, fallbackImages: string[]) {
+  if (!value) return fallbackImages;
+
+  try {
+    const parsedValue = JSON.parse(value);
+    return Array.isArray(parsedValue) ? parsedValue : fallbackImages;
+  } catch {
+    return fallbackImages;
+  }
+}
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -59,6 +72,7 @@ function SubmitButton() {
 
 export default function EditAnnuncioForm({ annuncio }: { annuncio: AnnuncioForm }) {
   const [state, formAction] = useActionState(updateAnnuncioAction.bind(null, annuncio.id), initialState);
+  const initialImages = parseStoredImages(state.formData?.existing_image_urls, getAnnuncioImages(annuncio));
 
   return (
     <div className="bg-white rounded-2xl border border-primary/10 overflow-hidden shadow-sm">
@@ -115,11 +129,10 @@ export default function EditAnnuncioForm({ annuncio }: { annuncio: AnnuncioForm 
                 <input id="prezzo" name="prezzo" type="number" min="0" required defaultValue={state.formData?.prezzo ?? annuncio.prezzo} className={inputClass} />
               </div>
               <div className="sm:col-span-2">
-                <ImageUpload name="immagine" currentUrl={annuncio.immagine_url} label="Immagine di copertina" />
-                <div className="mt-3">
-                  <label htmlFor="immagine_url" className="block text-xs font-medium text-secondary/60 mb-1">Oppure URL immagine</label>
-                  <input id="immagine_url" name="immagine_url" type="url" defaultValue={state.formData?.immagine_url ?? annuncio.immagine_url ?? ''} className={inputClass} placeholder="https://..." />
-                </div>
+                <AnnuncioImagesField
+                  initialImages={Array.isArray(initialImages) ? initialImages : []}
+                  initialManualUrlsText={state.formData?.manual_image_urls ?? ''}
+                />
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="descrizione" className="block text-sm font-medium text-secondary mb-1">Descrizione *</label>

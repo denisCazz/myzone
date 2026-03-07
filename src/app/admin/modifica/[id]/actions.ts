@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdminSession } from '@/lib/admin-auth';
 import { getSupabaseAdminClient } from '@/lib/supabase-admin';
-
-const STORAGE_BUCKET = 'annunci-images';
+import { parseExistingImagesJson, parseImageUrlsFromText, MAX_ANNUNCIO_IMAGES, normalizeImageUrls } from '@/lib/annuncio-images';
+import { getCloudflareR2ConfigStatus, uploadImagesToCloudflareR2 } from '@/lib/cloudflare-images';
 
 export type UpdateState = {
   error: string;
@@ -18,19 +18,6 @@ function formDataToObject(formData: FormData): Record<string, string> {
     if (typeof value === 'string') obj[key] = value;
   });
   return obj;
-}
-
-async function uploadImageToStorage(supabase: ReturnType<typeof getSupabaseAdminClient>, file: File): Promise<string | null> {
-  if (!file || file.size === 0 || file.size > 5 * 1024 * 1024) return null;
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
-  if (!['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return null;
-  const path = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
-  const { data, error } = await supabase!.storage
-    .from(STORAGE_BUCKET)
-    .upload(path, file, { contentType: file.type, upsert: false });
-  if (error) return null;
-  const { data: urlData } = supabase!.storage.from(STORAGE_BUCKET).getPublicUrl(data.path);
-  return urlData.publicUrl;
 }
 
 export async function updateAnnuncioAction(id: string, _: UpdateState, formData: FormData): Promise<UpdateState> {
@@ -50,12 +37,9 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
   const provincia = String(formData.get('provincia') || '').trim();
   const comune = String(formData.get('comune') || '').trim();
   const indirizzo = String(formData.get('indirizzo') || '').trim();
-  let immagineUrl = String(formData.get('immagine_url') || '').trim();
-  const file = formData.get('immagine') as File | null;
-  if (file && file.size > 0) {
-    const uploadedUrl = await uploadImageToStorage(supabase, file);
-    if (uploadedUrl) immagineUrl = uploadedUrl;
-  }
+  const existingImages = parseExistingImagesJson(formData.get('existing_image_urls'));
+  const manualImages = parseImageUrlsFromText(String(formData.get('manual_image_urls') || ''));
+  const uploadFiles = formData.getAll('immagini').filter((value): value is File => value instanceof File && value.size > 0);
   const piano = String(formData.get('piano') || '').trim();
   const ape = String(formData.get('ape') || '').trim();
   const riscaldamento = String(formData.get('riscaldamento') || '').trim();
@@ -89,6 +73,32 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
   if (prezzo <= 0) {
     return { error: 'Il prezzo deve essere maggiore di 0.', formData: formDataToObject(formData) };
   }
+
+  if (existingImages.length + manualImages.length + uploadFiles.length > MAX_ANNUNCIO_IMAGES) {
+    return { error: `Puoi salvare al massimo ${MAX_ANNUNCIO_IMAGES} immagini per annuncio.`, formData: formDataToObject(formData) };
+  }
+
+  if (uploadFiles.length > 0) {
+    const cloudflareConfig = getCloudflareR2ConfigStatus();
+    if (!cloudflareConfig.hasAccountId || !cloudflareConfig.hasAccessKeyId || !cloudflareConfig.hasSecretAccessKey || !cloudflareConfig.hasBucketName || !cloudflareConfig.hasPublicUrl) {
+      return {
+        error: 'Configurazione Cloudflare R2 mancante. Inserisci account ID, chiavi R2, bucket e URL pubblico.',
+        formData: formDataToObject(formData),
+      };
+    }
+  }
+
+  let uploadedImages: string[] = [];
+
+  try {
+    uploadedImages = await uploadImagesToCloudflareR2(uploadFiles);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Errore durante l\'upload immagini su Cloudflare R2.';
+    return { error: message, formData: formDataToObject(formData) };
+  }
+
+  const immaginiUrls = normalizeImageUrls([...existingImages, ...manualImages, ...uploadedImages]);
+  const immagineUrl = immaginiUrls[0] || null;
 
   const superficieMqInt = Math.round(superficieMq) || 0;
   const numeroLocaliInt = Math.round(numeroLocali) || 0;
@@ -127,7 +137,8 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
       agenzia_indirizzo: agenziaIndirizzo || null,
       agenzia_telefono: agenziaTelefono || null,
       agenzia_email: agenziaEmail || null,
-      immagine_url: immagineUrl || null,
+      immagine_url: immagineUrl,
+      immagini_urls: immaginiUrls,
     })
     .eq('id', id);
 

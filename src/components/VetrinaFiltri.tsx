@@ -1,10 +1,11 @@
 "use client";
 
 import { Annuncio } from "@/types";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { Bed, Maximize, MapPin, Building2, SlidersHorizontal, X } from "lucide-react";
 import { useState, useMemo } from "react";
+import { getAnnuncioImages } from "@/lib/annuncio-images";
 
 type Filtri = {
   tipoContratto: string;
@@ -347,22 +348,27 @@ export default function VetrinaFiltri({
                 className="group bg-white rounded-2xl overflow-hidden flex flex-col shadow-md shadow-primary/10 border border-primary/10 hover-lift animate-fade-in"
                 style={{ animationDelay: `${Math.min(i * 30, 300)}ms` }}
               >
+                {(() => {
+                  const coverImage = getAnnuncioImages(annuncio)[0];
+
+                  return (
                 <div className="relative h-72 w-full bg-primary/5 overflow-hidden">
-                  {annuncio.immagine_url ? (
+                  {coverImage ? (
                     <Image
-                      src={annuncio.immagine_url}
+                      src={coverImage}
                       alt={annuncio.titolo}
-                      unoptimized
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      unoptimized
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      draggable={false}
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
-                      <span className="text-primary/60 text-sm">Nessuna immagine</span>
+                    <div className="absolute inset-0 flex items-center justify-center text-sm text-primary/60">
+                      Nessuna immagine disponibile
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                   <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
                     <span
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-lg ${
@@ -384,6 +390,8 @@ export default function VetrinaFiltri({
                     </span>
                   </div>
                 </div>
+                  );
+                })()}
 
                 <div className="p-6 flex-grow flex flex-col">
                   <h3 className="text-xl font-bold text-secondary mb-3 line-clamp-2 min-h-[3.5rem] leading-snug">

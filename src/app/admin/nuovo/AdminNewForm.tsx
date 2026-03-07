@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { createAnnuncioAction } from './actions';
-import ImageUpload from '@/components/ImageUpload';
+import AnnuncioImagesField from '@/components/AnnuncioImagesField';
 
 const initialState: { error: string; formData?: Record<string, string> } = { error: '' };
 
@@ -88,11 +88,7 @@ export default function AdminNewForm() {
               </div>
 
               <div className="sm:col-span-2">
-                <ImageUpload name="immagine" label="Immagine di copertina" />
-                <div className="mt-3">
-                  <label htmlFor="immagine_url" className="block text-xs font-medium text-secondary/60 mb-1">Oppure URL immagine</label>
-                  <input id="immagine_url" name="immagine_url" type="url" className={inputClass} placeholder="https://..." defaultValue={state.formData?.immagine_url ?? ''} />
-                </div>
+                <AnnuncioImagesField initialManualUrlsText={state.formData?.manual_image_urls ?? ''} />
               </div>
 
               <div className="sm:col-span-2">

@@ -1,6 +1,6 @@
 ## MyZone - Sito Agenzia Immobiliare
 
-Progetto Next.js (App Router) con Tailwind CSS e integrazione Supabase per la gestione degli annunci immobiliari.
+Progetto Next.js (App Router) con Tailwind CSS, database Supabase e upload immagini su Cloudflare R2 per la gestione degli annunci immobiliari.
 
 ## Avvio locale
 
@@ -22,6 +22,11 @@ cp .env.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
+CLOUDFLARE_ACCOUNT_ID=...
+CLOUDFLARE_R2_ACCESS_KEY_ID=...
+CLOUDFLARE_R2_SECRET_ACCESS_KEY=...
+CLOUDFLARE_R2_BUCKET_NAME=...
+CLOUDFLARE_R2_PUBLIC_URL=https://pub-<hash>.r2.dev
 SMTP_HOST=...
 SMTP_PORT=587
 SMTP_USER=...
@@ -42,18 +47,25 @@ npm run dev
 2. Esegui lo script in [supabase/schema.sql](supabase/schema.sql).
 3. Verifica che la tabella `public.annunci` sia stata creata.
 
-## Setup Supabase Storage (upload immagini)
+## Setup immagini con Cloudflare R2
 
-Per caricare le immagini degli annunci dal PC:
+1. Crea un bucket **R2** nel tuo account Cloudflare.
+2. Recupera il tuo `Account ID` dalla dashboard Cloudflare.
+3. Crea delle **API Tokens / R2 API Keys** con permessi di scrittura sul bucket.
+4. Rendi pubblico il bucket tramite dominio `r2.dev` o dominio custom.
+5. Inserisci in `.env.local`:
 
-1. Vai su **Supabase Dashboard** → **Storage**.
-2. Clicca **New bucket**.
-3. Nome bucket: `annunci-images`.
-4. Imposta **Public bucket** (le immagini saranno accessibili pubblicamente).
-5. Clicca **Create bucket**.
-6. Nella policy del bucket, assicurati che il service role possa scrivere (di default con service role key l’upload funziona).
+```env
+CLOUDFLARE_ACCOUNT_ID=...
+CLOUDFLARE_R2_ACCESS_KEY_ID=...
+CLOUDFLARE_R2_SECRET_ACCESS_KEY=...
+CLOUDFLARE_R2_BUCKET_NAME=...
+CLOUDFLARE_R2_PUBLIC_URL=https://pub-<hash>.r2.dev
+```
 
-Formati supportati: JPG, PNG, WebP (max 5MB).
+Formati supportati: JPG, PNG, WebP (max 5MB per file).
+
+Guida completa: [docs/cloudflare-images-guide.md](docs/cloudflare-images-guide.md).
 
 Campi principali:
 
@@ -64,6 +76,7 @@ Campi principali:
 - `mq`
 - `numero_stanze`
 - `immagine_url`
+- `immagini_urls`
 - `tipologia` (`vendita` / `affitto`)
 
 ## Note
@@ -71,6 +84,7 @@ Campi principali:
 - La pagina [src/app/vetrina/page.tsx](src/app/vetrina/page.tsx) recupera gli annunci tramite Server Component.
 - Se le variabili Supabase mancano, la pagina mostra un messaggio di configurazione.
 - Le immagini remote degli annunci sono renderizzate con `unoptimized`.
+- La vetrina usa una galleria carousel con supporto a più immagini per annuncio.
 - Il form [src/app/(vendo-casa)/valuta-casa/page.tsx](src/app/(vendo-casa)/valuta-casa/page.tsx) invia email tramite [src/app/api/valuta-casa/route.ts](src/app/api/valuta-casa/route.ts).
 
 ## Area Admin (auth custom)

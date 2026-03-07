@@ -11,6 +11,7 @@ create table if not exists public.annunci (
   mq integer,
   numero_stanze integer,
   immagine_url text,
+  immagini_urls text[] not null default '{}'::text[],
   tipologia text,
   categoria text not null default 'RESIDENZIALE',
   tipologia_immobile text not null default 'IMMOBILE',
@@ -45,6 +46,7 @@ create table if not exists public.annunci (
 alter table public.annunci add column if not exists categoria text not null default 'RESIDENZIALE';
 alter table public.annunci add column if not exists tipologia_immobile text not null default 'IMMOBILE';
 alter table public.annunci add column if not exists tipo_contratto text not null default 'IN VENDITA';
+alter table public.annunci add column if not exists immagini_urls text[] not null default '{}'::text[];
 alter table public.annunci add column if not exists stato text not null default 'DISPONIBILE';
 alter table public.annunci add column if not exists provincia text not null default 'CUNEO';
 alter table public.annunci add column if not exists comune text not null default 'Cavallermaggiore';
@@ -70,6 +72,10 @@ alter table public.annunci add column if not exists agenzia_email text;
 
 update public.annunci
 set
+  immagini_urls = case
+    when coalesce(array_length(immagini_urls, 1), 0) = 0 and immagine_url is not null and trim(immagine_url) <> '' then array[immagine_url]
+    else immagini_urls
+  end,
   tipologia_immobile = case
     when tipologia_immobile = 'IMMOBILE' and tipologia is not null and tipologia not in ('vendita', 'affitto') then upper(tipologia)
     else tipologia_immobile
@@ -194,6 +200,10 @@ on conflict do nothing;
 update public.annunci
 set
   categoria = coalesce(categoria, 'RESIDENZIALE'),
+  immagini_urls = case
+    when coalesce(array_length(immagini_urls, 1), 0) = 0 and immagine_url is not null and trim(immagine_url) <> '' then array[immagine_url]
+    else immagini_urls
+  end,
   tipologia_immobile = case when tipologia_immobile = 'IMMOBILE' then 'APPARTAMENTO' else tipologia_immobile end,
   tipo_contratto = case when tipo_contratto = 'IN VENDITA' and lower(coalesce(tipologia, '')) = 'affitto' then 'IN AFFITTO' else tipo_contratto end,
   stato = coalesce(stato, 'DISPONIBILE')

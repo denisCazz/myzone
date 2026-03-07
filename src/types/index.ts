@@ -29,5 +29,6 @@ export interface Annuncio {
   agenzia_telefono: string | null;
   agenzia_email: string | null;
   immagine_url: string | null;
+  immagini_urls?: string[] | null;
   created_at?: string;
 }

@@ -1,10 +1,11 @@
 import { getSupabaseServerClient } from '@/lib/supabase-server';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Bed, Maximize, Euro, MapPin, Calendar, Building2, Phone, Mail, Bath, Trees, Building, ChevronRight } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { siteConfig } from '@/lib/site-config';
 import type { Metadata } from 'next';
+import ImageCarousel from '@/components/ImageCarousel';
+import { getAnnuncioImages } from '@/lib/annuncio-images';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -49,6 +50,7 @@ export default async function DettaglioAnnuncio({ params }: Props) {
 
   const prezzoAlMq = Math.round(annuncio.prezzo / Math.max(annuncio.superficie_mq || 1, 1));
   const telefono = annuncio.agenzia_telefono || siteConfig.phone;
+  const immagini = getAnnuncioImages(annuncio);
 
   return (
     <div className="min-h-screen bg-white">
@@ -71,23 +73,18 @@ export default async function DettaglioAnnuncio({ params }: Props) {
           </Link>
 
           {/* Hero immagine */}
-          <div className="relative h-72 sm:h-[28rem] lg:h-[34rem] rounded-2xl overflow-hidden bg-primary/5 shadow-xl shadow-primary/10">
-            {annuncio.immagine_url ? (
-              <Image
-                src={annuncio.immagine_url}
-                alt={annuncio.titolo}
-                unoptimized
-                fill
-                className="object-cover"
-                priority
-                sizes="100vw"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-primary/50">
-                Nessuna immagine disponibile
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="relative rounded-2xl bg-primary/5 shadow-xl shadow-primary/10">
+            <ImageCarousel
+              images={immagini}
+              alt={annuncio.titolo}
+              className="h-[22rem] sm:h-[28rem] lg:h-[34rem]"
+              priority
+              showThumbnails
+              enableLightbox
+              mobileContain
+              sizes="100vw"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute top-5 left-5 right-5 flex flex-wrap justify-between items-start gap-2">
               <div className="flex flex-wrap gap-2">
                 <span className={`px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-xl ${

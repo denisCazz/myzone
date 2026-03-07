@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { requireAdminSession } from '@/lib/admin-auth';
 import { deleteAnnuncioAction, logoutAction } from './actions';
 import DeleteAnnuncioButton from './DeleteAnnuncioButton';
+import { getAnnuncioImages } from '@/lib/annuncio-images';
 
 export default async function AdminDashboard() {
   const session = await requireAdminSession();
@@ -98,86 +99,96 @@ export default async function AdminDashboard() {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {annunci.map((annuncio: Annuncio, i: number) => (
-              <article
-                key={annuncio.id}
-                className="group bg-white rounded-2xl border border-primary/10 overflow-hidden hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${i * 50}ms` }}
-              >
-                <div className="relative aspect-[4/3] bg-primary/5">
-                  {annuncio.immagine_url ? (
-                    <Image
-                      src={annuncio.immagine_url}
-                      alt={annuncio.titolo}
-                      fill
-                      unoptimized
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-primary/50">
-                      <ImageIcon className="w-12 h-12" />
-                    </div>
-                  )}
-                  <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold uppercase tracking-wider ${
-                      annuncio.tipo_contratto === 'IN VENDITA' ? 'bg-primary text-white' : 'bg-secondary text-white'
-                    }`}>
-                      {annuncio.tipo_contratto}
-                    </span>
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${
-                      annuncio.stato === 'DISPONIBILE'
-                        ? 'bg-white/95 text-secondary'
-                        : annuncio.stato === 'IN TRATTATIVA'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-black/60 text-white'
-                    }`}>
-                      {annuncio.stato}
-                    </span>
-                  </div>
-                </div>
+            {annunci.map((annuncio: Annuncio, i: number) => {
+              const immagini = getAnnuncioImages(annuncio);
+              const coverImage = immagini[0];
 
-                <div className="p-5">
-                  <h3 className="font-semibold text-secondary line-clamp-2 mb-2 min-h-[2.5rem]">
-                    {annuncio.titolo}
-                  </h3>
-                  <div className="flex items-center gap-1.5 text-sm text-secondary/70 mb-3">
-                    <MapPin className="w-4 h-4 flex-shrink-0" />
-                    <span className="line-clamp-1">{annuncio.comune} · {annuncio.indirizzo}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-lg font-bold text-primary mb-4">
-                    <Euro className="w-4 h-4" />
-                    {formatPrice(annuncio.prezzo)}
-                    {annuncio.tipo_contratto === 'IN AFFITTO' && (
-                      <span className="text-sm font-normal text-secondary/60">/mese</span>
+              return (
+                <article
+                  key={annuncio.id}
+                  className="group bg-white rounded-2xl border border-primary/10 overflow-hidden hover:shadow-xl hover:shadow-primary/15 transition-all duration-300 animate-fade-in"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  <div className="relative aspect-[4/3] bg-primary/5">
+                    {coverImage ? (
+                      <Image
+                        src={coverImage}
+                        alt={annuncio.titolo}
+                        fill
+                        unoptimized
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-primary/50">
+                        <ImageIcon className="w-12 h-12" />
+                      </div>
+                    )}
+                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                      <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold uppercase tracking-wider ${
+                        annuncio.tipo_contratto === 'IN VENDITA' ? 'bg-primary text-white' : 'bg-secondary text-white'
+                      }`}>
+                        {annuncio.tipo_contratto}
+                      </span>
+                      <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${
+                        annuncio.stato === 'DISPONIBILE'
+                          ? 'bg-white/95 text-secondary'
+                          : annuncio.stato === 'IN TRATTATIVA'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-black/60 text-white'
+                      }`}>
+                        {annuncio.stato}
+                      </span>
+                    </div>
+                    {immagini.length > 1 && (
+                      <div className="absolute bottom-3 left-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white">
+                        {immagini.length} immagini
+                      </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-secondary/70 mb-5">
-                    <span>{annuncio.superficie_mq} mq</span>
-                    <span>·</span>
-                    <span>{annuncio.numero_locali} locali</span>
-                  </div>
 
-                  <div className="flex items-center gap-4 pt-4 border-t border-primary/10">
-                    <Link
-                      href={`/vetrina/${annuncio.id}`}
-                      target="_blank"
-                      className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                    >
-                      Visualizza
-                    </Link>
-                    <Link
-                      href={`/admin/modifica/${annuncio.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 font-medium text-sm transition-colors"
-                    >
-                      <Edit className="w-4 h-4" />
-                      Modifica
-                    </Link>
-                    <DeleteAnnuncioButton id={annuncio.id} deleteAction={deleteAnnuncioAction} />
+                  <div className="p-5">
+                    <h3 className="font-semibold text-secondary line-clamp-2 mb-2 min-h-[2.5rem]">
+                      {annuncio.titolo}
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-sm text-secondary/70 mb-3">
+                      <MapPin className="w-4 h-4 flex-shrink-0" />
+                      <span className="line-clamp-1">{annuncio.comune} · {annuncio.indirizzo}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-lg font-bold text-primary mb-4">
+                      <Euro className="w-4 h-4" />
+                      {formatPrice(annuncio.prezzo)}
+                      {annuncio.tipo_contratto === 'IN AFFITTO' && (
+                        <span className="text-sm font-normal text-secondary/60">/mese</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-secondary/70 mb-5">
+                      <span>{annuncio.superficie_mq} mq</span>
+                      <span>·</span>
+                      <span>{annuncio.numero_locali} locali</span>
+                    </div>
+
+                    <div className="flex items-center gap-4 pt-4 border-t border-primary/10">
+                      <Link
+                        href={`/vetrina/${annuncio.id}`}
+                        target="_blank"
+                        className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                      >
+                        Visualizza
+                      </Link>
+                      <Link
+                        href={`/admin/modifica/${annuncio.id}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 font-medium text-sm transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Modifica
+                      </Link>
+                      <DeleteAnnuncioButton id={annuncio.id} deleteAction={deleteAnnuncioAction} />
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

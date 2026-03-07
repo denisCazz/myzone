@@ -16,7 +16,7 @@ export default async function ModificaAnnuncioPage({ params }: { params: Promise
 
   const { data: annuncio } = await supabase
     .from('annunci')
-    .select('id, titolo, descrizione, prezzo, provincia, comune, indirizzo, categoria, tipologia_immobile, tipo_contratto, stato, numero_locali, superficie_mq, piano, bagni, ape, ipe, riscaldamento, tipo_riscaldamento, sistema_radiante, cucina, box, giardino, terrazzo, ascensore, agenzia_nome, agenzia_indirizzo, agenzia_telefono, agenzia_email, immagine_url')
+    .select('*')
     .eq('id', id)
     .single();
 
