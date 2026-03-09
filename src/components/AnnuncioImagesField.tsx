@@ -279,26 +279,30 @@ function PreviewCard({
   onRemove: () => void;
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-primary/15 bg-white shadow-sm">
       <div className="relative aspect-[4/3] bg-primary/5">
         <Image src={imageUrl} alt={title} fill unoptimized className="object-cover" sizes="(max-width: 640px) 100vw, 33vw" />
       </div>
-      <div className="flex items-start justify-between gap-3 p-3">
+      <div className="border-t border-primary/10 bg-slate-50/90 p-3.5">
         <div className="min-w-0">
-          <div className="mb-1 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
+          <div
+            className={`mb-2 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
+              isCover ? 'bg-primary text-white' : 'bg-secondary/10 text-secondary'
+            }`}
+          >
             {icon}
             {badge}
           </div>
-          <p className="truncate text-sm font-medium text-secondary">{title}</p>
+          <p className="truncate text-sm font-semibold text-secondary">{title}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2">
           <button
             type="button"
             onClick={onSetCover}
-            className={`rounded-xl border px-3 py-2 text-xs font-semibold transition-colors ${
+            className={`min-w-0 flex-1 rounded-xl border px-3 py-2 text-xs font-semibold transition-colors ${
               isCover
-                ? 'border-primary/20 bg-primary text-white'
-                : 'border-primary/15 text-secondary/70 hover:bg-primary/5'
+                ? 'border-primary/20 bg-primary text-white shadow-sm'
+                : 'border-primary/20 bg-white text-secondary hover:bg-primary/5'
             }`}
           >
             {isCover ? 'Copertina' : 'Metti copertina'}
@@ -306,7 +310,7 @@ function PreviewCard({
           <button
             type="button"
             onClick={onRemove}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-primary/15 text-secondary/65 transition-colors hover:bg-red-50 hover:text-red-600"
+            className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-white text-secondary/80 transition-colors hover:bg-red-50 hover:text-red-600"
             aria-label={`Rimuovi ${title}`}
           >
             <Trash2 className="h-4 w-4" />
