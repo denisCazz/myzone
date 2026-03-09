@@ -5,6 +5,15 @@ export type AnnuncioWithImages = {
   immagini_urls?: string[] | null;
 };
 
+export const COVER_SELECTION_UPLOAD_PREFIX = 'upload:';
+export const COVER_SELECTION_URL_PREFIX = 'url:';
+
+type FileLike = {
+  name: string;
+  size: number;
+  lastModified: number;
+};
+
 export function normalizeImageUrl(value: string | null | undefined): string | null {
   if (!value) return null;
 
@@ -58,6 +67,54 @@ export function parseExistingImagesJson(value: FormDataEntryValue | null): strin
   } catch {
     return [];
   }
+}
+
+export function getFileSignature(file: FileLike): string {
+  return `${file.name}-${file.size}-${file.lastModified}`;
+}
+
+export function createUrlCoverSelection(url: string) {
+  return `${COVER_SELECTION_URL_PREFIX}${url}`;
+}
+
+export function createUploadCoverSelection(file: FileLike) {
+  return `${COVER_SELECTION_UPLOAD_PREFIX}${getFileSignature(file)}`;
+}
+
+export function sortImagesWithCoverSelection(params: {
+  existingImages: string[];
+  manualImages: string[];
+  uploadedImages: string[];
+  uploadFiles: File[];
+  coverSelection: string | null | undefined;
+}) {
+  const { existingImages, manualImages, uploadedImages, uploadFiles, coverSelection } = params;
+  const images = normalizeImageUrls([...existingImages, ...manualImages, ...uploadedImages]);
+
+  if (!coverSelection) {
+    return images;
+  }
+
+  let coverImageUrl: string | null = null;
+
+  if (coverSelection.startsWith(COVER_SELECTION_URL_PREFIX)) {
+    coverImageUrl = normalizeImageUrl(coverSelection.slice(COVER_SELECTION_URL_PREFIX.length));
+  } else if (coverSelection.startsWith(COVER_SELECTION_UPLOAD_PREFIX)) {
+    const signature = coverSelection.slice(COVER_SELECTION_UPLOAD_PREFIX.length);
+    const uploadIndex = uploadFiles.findIndex((file) => getFileSignature(file) === signature);
+    coverImageUrl = uploadIndex >= 0 ? uploadedImages[uploadIndex] ?? null : null;
+  }
+
+  if (!coverImageUrl) {
+    return images;
+  }
+
+  const coverIndex = images.indexOf(coverImageUrl);
+  if (coverIndex <= 0) {
+    return images;
+  }
+
+  return [images[coverIndex], ...images.filter((_, index) => index !== coverIndex)];
 }
 
 export function getAnnuncioImages(annuncio: AnnuncioWithImages): string[] {

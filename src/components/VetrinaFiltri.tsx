@@ -343,8 +343,9 @@ export default function VetrinaFiltri({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
             {annunciFiltrati.map((annuncio: Annuncio, i: number) => (
-              <article
+              <Link
                 key={annuncio.id}
+                href={`/vetrina/${annuncio.id}`}
                 className="group bg-white rounded-2xl overflow-hidden flex flex-col shadow-md shadow-primary/10 border border-primary/10 hover-lift animate-fade-in"
                 style={{ animationDelay: `${Math.min(i * 30, 300)}ms` }}
               >
@@ -434,14 +435,11 @@ export default function VetrinaFiltri({
                     {annuncio.descrizione}
                   </p>
 
-                  <Link
-                    href={`/vetrina/${annuncio.id}`}
-                    className="block w-full text-center bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all btn-glow"
-                  >
+                  <span className="block w-full text-center bg-primary hover:bg-primary/90 text-white font-bold py-3.5 rounded-xl transition-all btn-glow">
                     Vedi dettagli
-                  </Link>
+                  </span>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}

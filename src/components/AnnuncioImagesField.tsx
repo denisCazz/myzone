@@ -3,6 +3,11 @@
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { GripVertical, ImagePlus, Link2, Trash2, Upload } from 'lucide-react';
+import {
+  createUploadCoverSelection,
+  createUrlCoverSelection,
+  getFileSignature,
+} from '@/lib/annuncio-images';
 
 type PreviewFile = {
   id: string;
@@ -15,10 +20,6 @@ type AnnuncioImagesFieldProps = {
   initialImages?: string[];
   initialManualUrlsText?: string;
 };
-
-function getFileSignature(file: File) {
-  return `${file.name}-${file.size}-${file.lastModified}`;
-}
 
 function buildPreviewFile(file: File): PreviewFile {
   return {
@@ -43,19 +44,36 @@ function normalizeTextUrls(value: string) {
     .filter(Boolean);
 }
 
+function getFallbackCoverSelection(existingImages: string[], manualUrls: string[], newFiles: PreviewFile[]) {
+  if (existingImages[0]) return createUrlCoverSelection(existingImages[0]);
+  if (manualUrls[0]) return createUrlCoverSelection(manualUrls[0]);
+  if (newFiles[0]) return createUploadCoverSelection(newFiles[0].file);
+  return '';
+}
+
 export default function AnnuncioImagesField({
   label = 'Galleria immagini',
   initialImages = [],
   initialManualUrlsText = '',
 }: AnnuncioImagesFieldProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const pickerInputRef = useRef<HTMLInputElement>(null);
+  const submitInputRef = useRef<HTMLInputElement>(null);
   const newFilesRef = useRef<PreviewFile[]>([]);
   const [existingImages, setExistingImages] = useState(initialImages);
   const [manualUrlsText, setManualUrlsText] = useState(initialManualUrlsText);
   const [newFiles, setNewFiles] = useState<PreviewFile[]>([]);
+  const [selectedCoverSelection, setSelectedCoverSelection] = useState(() =>
+    getFallbackCoverSelection(initialImages, [], []),
+  );
+
+  const manualUrls = useMemo(() => normalizeTextUrls(manualUrlsText), [manualUrlsText]);
 
   useEffect(() => {
     newFilesRef.current = newFiles;
+  }, [newFiles]);
+
+  useEffect(() => {
+    syncInputFiles(submitInputRef.current, newFiles.map((item) => item.file));
   }, [newFiles]);
 
   useEffect(() => {
@@ -64,7 +82,19 @@ export default function AnnuncioImagesField({
     };
   }, []);
 
-  const manualUrls = useMemo(() => normalizeTextUrls(manualUrlsText), [manualUrlsText]);
+  const coverSelection = useMemo(() => {
+    const availableCoverSelections = new Set([
+      ...existingImages.map((imageUrl) => createUrlCoverSelection(imageUrl)),
+      ...manualUrls.map((imageUrl) => createUrlCoverSelection(imageUrl)),
+      ...newFiles.map((file) => createUploadCoverSelection(file.file)),
+    ]);
+
+    if (selectedCoverSelection && availableCoverSelections.has(selectedCoverSelection)) {
+      return selectedCoverSelection;
+    }
+
+    return getFallbackCoverSelection(existingImages, manualUrls, newFiles);
+  }, [existingImages, manualUrls, newFiles, selectedCoverSelection]);
 
   const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
@@ -75,9 +105,7 @@ export default function AnnuncioImagesField({
         .filter((file) => !existingSignatures.has(getFileSignature(file)))
         .map((file) => buildPreviewFile(file));
 
-      const nextFiles = [...currentFiles, ...appendedFiles];
-      syncInputFiles(inputRef.current, nextFiles.map((item) => item.file));
-      return nextFiles;
+      return [...currentFiles, ...appendedFiles];
     });
 
     event.target.value = '';
@@ -99,7 +127,6 @@ export default function AnnuncioImagesField({
       if (removedFile) {
         URL.revokeObjectURL(removedFile.previewUrl);
       }
-      syncInputFiles(inputRef.current, nextFiles.map((item) => item.file));
       return nextFiles;
     });
   };
@@ -109,21 +136,31 @@ export default function AnnuncioImagesField({
       <div>
         <label className="block text-sm font-medium text-secondary mb-1">{label}</label>
         <p className="text-xs text-secondary/60">
-          La prima immagine disponibile diventa copertina. Puoi caricare più file o incollare più URL, uno per riga.
+          Puoi scegliere manualmente la copertina. Carica piu file o incolla piu URL, uno per riga.
         </p>
       </div>
 
       <input type="hidden" name="existing_image_urls" value={JSON.stringify(existingImages)} />
+      <input type="hidden" name="cover_image_selection" value={coverSelection} />
+      <input
+        ref={submitInputRef}
+        type="file"
+        name="immagini"
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        tabIndex={-1}
+        aria-hidden="true"
+        className="hidden"
+      />
 
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <div
-          onClick={() => inputRef.current?.click()}
+          onClick={() => pickerInputRef.current?.click()}
           className="relative min-h-[180px] rounded-2xl border-2 border-dashed border-primary/20 bg-white/80 px-5 py-8 text-center transition-colors hover:border-primary/40 hover:bg-white cursor-pointer"
         >
           <input
-            ref={inputRef}
+            ref={pickerInputRef}
             type="file"
-            name="immagini"
             accept="image/jpeg,image/png,image/webp"
             multiple
             onChange={handleFilesChange}
@@ -154,7 +191,7 @@ export default function AnnuncioImagesField({
             className="w-full rounded-2xl border border-primary/15 bg-white px-3 py-3 text-sm text-secondary placeholder:text-secondary/35 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
           <p className="text-xs text-secondary/55">
-            Usa questo campo per immagini già pubblicate su R2 o da importare manualmente.
+            Usa questo campo per immagini gia pubblicate su R2 o da importare manualmente.
           </p>
         </div>
       </div>
@@ -167,38 +204,56 @@ export default function AnnuncioImagesField({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {existingImages.map((imageUrl, index) => (
-              <PreviewCard
-                key={`existing-${imageUrl}`}
-                imageUrl={imageUrl}
-                title={`Immagine salvata ${index + 1}`}
-                badge={index === 0 ? 'Copertina attuale' : 'Salvata'}
-                icon={<ImagePlus className="h-4 w-4" />}
-                onRemove={() => removeExistingImage(imageUrl)}
-              />
-            ))}
+            {existingImages.map((imageUrl, index) => {
+              const isCover = coverSelection === createUrlCoverSelection(imageUrl);
 
-            {manualUrls.map((imageUrl, index) => (
-              <PreviewCard
-                key={`manual-${imageUrl}-${index}`}
-                imageUrl={imageUrl}
-                title={`URL manuale ${index + 1}`}
-                badge={existingImages.length === 0 && index === 0 ? 'Copertina nuova' : 'URL manuale'}
-                icon={<Link2 className="h-4 w-4" />}
-                onRemove={() => removeManualUrl(index)}
-              />
-            ))}
+              return (
+                <PreviewCard
+                  key={`existing-${imageUrl}`}
+                  imageUrl={imageUrl}
+                  title={`Immagine salvata ${index + 1}`}
+                  badge={isCover ? 'Copertina' : 'Salvata'}
+                  icon={<ImagePlus className="h-4 w-4" />}
+                  isCover={isCover}
+                  onSetCover={() => setSelectedCoverSelection(createUrlCoverSelection(imageUrl))}
+                  onRemove={() => removeExistingImage(imageUrl)}
+                />
+              );
+            })}
 
-            {newFiles.map((file, index) => (
-              <PreviewCard
-                key={file.id}
-                imageUrl={file.previewUrl}
-                title={file.file.name}
-                badge={existingImages.length === 0 && manualUrls.length === 0 && index === 0 ? 'Copertina nuova' : 'Nuovo upload'}
-                icon={<Upload className="h-4 w-4" />}
-                onRemove={() => removeNewFile(file.id)}
-              />
-            ))}
+            {manualUrls.map((imageUrl, index) => {
+              const isCover = coverSelection === createUrlCoverSelection(imageUrl);
+
+              return (
+                <PreviewCard
+                  key={`manual-${imageUrl}-${index}`}
+                  imageUrl={imageUrl}
+                  title={`URL manuale ${index + 1}`}
+                  badge={isCover ? 'Copertina' : 'URL manuale'}
+                  icon={<Link2 className="h-4 w-4" />}
+                  isCover={isCover}
+                  onSetCover={() => setSelectedCoverSelection(createUrlCoverSelection(imageUrl))}
+                  onRemove={() => removeManualUrl(index)}
+                />
+              );
+            })}
+
+            {newFiles.map((file) => {
+              const isCover = coverSelection === createUploadCoverSelection(file.file);
+
+              return (
+                <PreviewCard
+                  key={file.id}
+                  imageUrl={file.previewUrl}
+                  title={file.file.name}
+                  badge={isCover ? 'Copertina' : 'Nuovo upload'}
+                  icon={<Upload className="h-4 w-4" />}
+                  isCover={isCover}
+                  onSetCover={() => setSelectedCoverSelection(createUploadCoverSelection(file.file))}
+                  onRemove={() => removeNewFile(file.id)}
+                />
+              );
+            })}
           </div>
         </div>
       )}
@@ -211,12 +266,16 @@ function PreviewCard({
   title,
   badge,
   icon,
+  isCover,
+  onSetCover,
   onRemove,
 }: {
   imageUrl: string;
   title: string;
   badge: string;
   icon: ReactNode;
+  isCover: boolean;
+  onSetCover: () => void;
   onRemove: () => void;
 }) {
   return (
@@ -232,14 +291,27 @@ function PreviewCard({
           </div>
           <p className="truncate text-sm font-medium text-secondary">{title}</p>
         </div>
-        <button
-          type="button"
-          onClick={onRemove}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-primary/15 text-secondary/65 transition-colors hover:bg-red-50 hover:text-red-600"
-          aria-label={`Rimuovi ${title}`}
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onSetCover}
+            className={`rounded-xl border px-3 py-2 text-xs font-semibold transition-colors ${
+              isCover
+                ? 'border-primary/20 bg-primary text-white'
+                : 'border-primary/15 text-secondary/70 hover:bg-primary/5'
+            }`}
+          >
+            {isCover ? 'Copertina' : 'Metti copertina'}
+          </button>
+          <button
+            type="button"
+            onClick={onRemove}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-primary/15 text-secondary/65 transition-colors hover:bg-red-50 hover:text-red-600"
+            aria-label={`Rimuovi ${title}`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

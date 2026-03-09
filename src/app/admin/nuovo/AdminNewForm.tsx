@@ -45,7 +45,7 @@ export default function AdminNewForm() {
           </div>
         )}
 
-        <form key={state.formData ? 'restored' : 'new'} action={formAction} className="space-y-8">
+        <form key={state.formData ? 'restored' : 'new'} action={formAction} encType="multipart/form-data" className="space-y-8">
           <section className="space-y-6">
             <h2 className="text-lg font-semibold text-secondary">Informazioni principali</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
