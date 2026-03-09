@@ -60,17 +60,8 @@ export async function getAdminSession() {
     : sessionRow.admin_utenti;
 
   if (isExpired || !user || !user.is_active) {
-    await supabase.from('admin_sessioni').delete().eq('id', sessionRow.id);
-    cookieStore.delete(SESSION_COOKIE_NAME);
     return null;
   }
-
-  const renewedExpiresAt = getSessionExpirationDate();
-  await supabase
-    .from('admin_sessioni')
-    .update({ expires_at: renewedExpiresAt.toISOString() })
-    .eq('id', sessionRow.id);
-  await persistSessionCookie(sessionToken, renewedExpiresAt);
 
   return {
     sessionId: sessionRow.id,
