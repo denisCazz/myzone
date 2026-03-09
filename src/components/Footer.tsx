@@ -9,7 +9,7 @@ const links = [
   { href: "/vetrina", label: "Vetrina" },
   { href: "/valuta-casa", label: "Valuta casa" },
   { href: "/contatti", label: "Contatti" },
-  { href: "/admin/login", label: "Accesso Admin" },
+  { href: "/admin", label: "Accesso Admin" },
 ];
 
 export default function Footer() {

@@ -7,10 +7,28 @@ import { createHash, randomUUID } from 'crypto';
 import { getSupabaseAdminClient, getSupabaseAdminConfigStatus } from './supabase-admin';
 
 const SESSION_COOKIE_NAME = 'myzone_admin_session';
-const SESSION_TTL_DAYS = 7;
+const SESSION_TTL_DAYS = 30;
 
 function hashToken(token: string) {
   return createHash('sha256').update(token).digest('hex');
+}
+
+function getSessionExpirationDate() {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + SESSION_TTL_DAYS);
+  return expiresAt;
+}
+
+async function persistSessionCookie(token: string, expiresAt: Date) {
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    expires: expiresAt,
+    maxAge: SESSION_TTL_DAYS * 24 * 60 * 60,
+  });
 }
 
 export async function getAdminSession() {
@@ -46,6 +64,13 @@ export async function getAdminSession() {
     cookieStore.delete(SESSION_COOKIE_NAME);
     return null;
   }
+
+  const renewedExpiresAt = getSessionExpirationDate();
+  await supabase
+    .from('admin_sessioni')
+    .update({ expires_at: renewedExpiresAt.toISOString() })
+    .eq('id', sessionRow.id);
+  await persistSessionCookie(sessionToken, renewedExpiresAt);
 
   return {
     sessionId: sessionRow.id,
@@ -96,8 +121,7 @@ export async function loginAdmin(email: string, password: string) {
   }
 
   const rawToken = randomUUID() + randomUUID();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + SESSION_TTL_DAYS);
+  const expiresAt = getSessionExpirationDate();
 
   const { error } = await supabase.from('admin_sessioni').insert({
     utente_id: user.id,
@@ -109,14 +133,7 @@ export async function loginAdmin(email: string, password: string) {
     return { ok: false, error: 'Impossibile creare la sessione admin.' };
   }
 
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, rawToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    expires: expiresAt,
-  });
+  await persistSessionCookie(rawToken, expiresAt);
 
   return { ok: true, error: '' };
 }
