@@ -341,7 +341,7 @@ export default function VetrinaFiltri({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-2 md:gap-8">
             {annunciFiltrati.map((annuncio: Annuncio, i: number) => (
               <Link
                 key={annuncio.id}
@@ -353,14 +353,14 @@ export default function VetrinaFiltri({
                   const coverImage = getAnnuncioImages(annuncio)[0];
 
                   return (
-                <div className="relative h-72 w-full bg-primary/5 overflow-hidden">
+                <div className="relative aspect-[16/10] sm:h-72 sm:aspect-auto w-full bg-slate-100 overflow-hidden">
                   {coverImage ? (
                     <Image
                       src={coverImage}
                       alt={annuncio.titolo}
                       fill
                       unoptimized
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       draggable={false}
                     />
@@ -369,17 +369,17 @@ export default function VetrinaFiltri({
                       Nessuna immagine disponibile
                     </div>
                   )}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                  <div className="absolute top-3 left-3 right-3 flex justify-between items-start gap-2 sm:top-4 sm:left-4 sm:right-4">
                     <span
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-lg ${
+                      className={`max-w-[55%] truncate px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-lg ${
                         annuncio.tipo_contratto === "IN VENDITA" ? "bg-primary" : "bg-secondary"
                       }`}
                     >
                       {annuncio.tipo_contratto}
                     </span>
                     <span
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold shadow-md ${
+                      className={`px-2.5 py-1.5 rounded-xl text-[11px] sm:text-xs font-semibold shadow-md ${
                         annuncio.stato === "DISPONIBILE"
                           ? "bg-white/95 text-secondary"
                           : annuncio.stato === "IN TRATTATIVA"
@@ -394,8 +394,8 @@ export default function VetrinaFiltri({
                   );
                 })()}
 
-                <div className="p-6 flex-grow flex flex-col">
-                  <h3 className="text-xl font-bold text-secondary mb-3 line-clamp-2 min-h-[3.5rem] leading-snug">
+                <div className="p-5 sm:p-6 flex-grow flex flex-col">
+                  <h3 className="text-lg sm:text-xl font-bold text-secondary mb-3 line-clamp-2 min-h-[3.25rem] sm:min-h-[3.5rem] leading-snug">
                     {annuncio.titolo}
                   </h3>
 

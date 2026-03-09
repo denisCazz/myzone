@@ -73,47 +73,46 @@ export default async function DettaglioAnnuncio({ params }: Props) {
           </Link>
 
           {/* Hero immagine */}
-          <div className="relative rounded-2xl bg-primary/5 shadow-xl shadow-primary/10">
+          <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-xl shadow-primary/10">
             <ImageCarousel
               images={immagini}
               alt={annuncio.titolo}
-              className="h-[22rem] sm:h-[28rem] lg:h-[34rem]"
+              className="h-[18rem] sm:h-[28rem] lg:h-[34rem]"
               priority
               showThumbnails
+              thumbnailsMobileOnly
               enableLightbox
               mobileContain
               sizes="100vw"
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            <div className="absolute top-5 left-5 right-5 flex flex-wrap justify-between items-start gap-2">
+            <div className="space-y-4 border-t border-primary/10 bg-white p-5 sm:p-7">
               <div className="flex flex-wrap gap-2">
-                <span className={`px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-xl ${
+                <span className={`px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-white ${
                   annuncio.tipo_contratto === 'IN VENDITA' ? 'bg-primary' : 'bg-secondary'
                 }`}>
                   {annuncio.tipo_contratto}
                 </span>
-                <span className={`px-3 py-2 rounded-xl text-xs font-semibold shadow-lg ${
+                <span className={`px-3 py-2 rounded-xl text-xs font-semibold ${
                   annuncio.stato === 'DISPONIBILE'
-                    ? 'bg-white/95 text-secondary'
+                    ? 'bg-primary/10 text-secondary'
                     : annuncio.stato === 'IN TRATTATIVA'
                     ? 'bg-amber-100 text-amber-800'
-                    : 'bg-black/60 text-white'
+                    : 'bg-secondary text-white'
                 }`}>
                   {annuncio.stato}
                 </span>
               </div>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 drop-shadow-2xl">
-                {annuncio.titolo}
-              </h1>
-              <div className="flex flex-wrap items-center gap-2 text-white/90 text-sm sm:text-base">
-                <span className="inline-flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4" />
-                  {annuncio.comune} ({annuncio.provincia})
-                </span>
-                <span className="hidden sm:inline text-white/30">•</span>
-                <span>{annuncio.indirizzo}</span>
+              <div>
+                <h1 className="text-2xl sm:text-3xl lg:text-[2.5rem] font-bold text-secondary leading-tight tracking-tight">
+                  {annuncio.titolo}
+                </h1>
+                <div className="mt-3 flex flex-col gap-2 text-sm sm:text-base text-secondary/80">
+                  <span className="inline-flex items-center gap-1.5 font-medium text-secondary">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    {annuncio.comune} ({annuncio.provincia})
+                  </span>
+                  <span className="pl-5 text-secondary/70">{annuncio.indirizzo}</span>
+                </div>
               </div>
             </div>
           </div>

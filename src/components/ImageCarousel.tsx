@@ -11,6 +11,7 @@ type ImageCarouselProps = {
   sizes?: string;
   priority?: boolean;
   showThumbnails?: boolean;
+  thumbnailsMobileOnly?: boolean;
   roundedClassName?: string;
   enableLightbox?: boolean;
   mobileContain?: boolean;
@@ -27,6 +28,7 @@ export default function ImageCarousel({
   sizes = '100vw',
   priority = false,
   showThumbnails = false,
+  thumbnailsMobileOnly = false,
   roundedClassName = 'rounded-2xl',
   enableLightbox = false,
   mobileContain = false,
@@ -81,12 +83,12 @@ export default function ImageCarousel({
   const activeImage = safeImages[activeIndex] || safeImages[0];
   const activeImageIsRemote = isRemoteImageUrl(activeImage);
   const mainImageClassName = mobileContain
-    ? 'pointer-events-none select-none object-contain sm:object-cover'
+    ? 'pointer-events-none select-none object-contain object-center p-2 sm:p-0 sm:object-cover'
     : 'pointer-events-none select-none object-cover';
 
   return (
     <div className="space-y-3">
-      <div className={`relative overflow-hidden bg-primary/5 ${roundedClassName} ${className}`}>
+      <div className={`relative overflow-hidden bg-slate-100 ${roundedClassName} ${className}`}>
         {enableLightbox ? (
           <button
             type="button"
@@ -133,7 +135,7 @@ export default function ImageCarousel({
             <button
               type="button"
               onClick={() => goTo(activeIndex - 1)}
-              className="absolute left-2 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/60 sm:left-3 sm:h-10 sm:w-10"
+              className="absolute left-2 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-black/70 sm:left-3 sm:h-10 sm:w-10"
               aria-label="Immagine precedente"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -141,7 +143,7 @@ export default function ImageCarousel({
             <button
               type="button"
               onClick={() => goTo(activeIndex + 1)}
-              className="absolute right-2 top-1/2 z-10 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/45 text-white transition-colors hover:bg-black/60 sm:right-3 sm:h-10 sm:w-10"
+              className="absolute right-2 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-black/70 sm:right-3 sm:h-10 sm:w-10"
               aria-label="Immagine successiva"
             >
               <ChevronRight className="h-5 w-5" />
@@ -162,13 +164,13 @@ export default function ImageCarousel({
       </div>
 
       {showThumbnails && safeImages.length > 1 && (
-        <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1 sm:mx-0 sm:grid sm:grid-cols-6 sm:overflow-visible sm:px-0">
+        <div className={`${thumbnailsMobileOnly ? 'sm:hidden' : ''} -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:grid sm:grid-cols-6 sm:gap-3 sm:overflow-visible sm:px-0`}>
           {safeImages.map((imageUrl, index) => (
             <button
               key={`${imageUrl}-${index}`}
               type="button"
               onClick={() => goTo(index)}
-              className={`relative aspect-[4/3] min-w-[88px] overflow-hidden rounded-xl border transition-colors sm:min-w-0 ${index === activeIndex ? 'border-primary shadow-sm shadow-primary/20' : 'border-primary/10 hover:border-primary/30'}`}
+              className={`relative aspect-[4/3] min-w-[76px] overflow-hidden rounded-xl border transition-colors sm:min-w-0 ${index === activeIndex ? 'border-primary shadow-sm shadow-primary/20' : 'border-primary/10 hover:border-primary/30'}`}
               aria-label={`Seleziona l'immagine ${index + 1}`}
             >
               <Image
