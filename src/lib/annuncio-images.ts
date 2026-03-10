@@ -69,6 +69,30 @@ export function parseExistingImagesJson(value: FormDataEntryValue | null): strin
   }
 }
 
+export function parseImageOrderSelectionsJson(value: FormDataEntryValue | null): string[] {
+  if (typeof value !== 'string' || !value.trim()) return [];
+
+  try {
+    const parsedValue = JSON.parse(value);
+    if (!Array.isArray(parsedValue)) return [];
+
+    const uniqueSelections = new Set<string>();
+
+    parsedValue.forEach((item) => {
+      if (
+        typeof item === 'string' &&
+        (item.startsWith(COVER_SELECTION_URL_PREFIX) || item.startsWith(COVER_SELECTION_UPLOAD_PREFIX))
+      ) {
+        uniqueSelections.add(item);
+      }
+    });
+
+    return Array.from(uniqueSelections);
+  } catch {
+    return [];
+  }
+}
+
 export function getFileSignature(file: FileLike): string {
   return `${file.name}-${file.size}-${file.lastModified}`;
 }
@@ -87,12 +111,51 @@ export function sortImagesWithCoverSelection(params: {
   uploadedImages: string[];
   uploadFiles: File[];
   coverSelection: string | null | undefined;
+  imageOrderSelections?: string[];
 }) {
-  const { existingImages, manualImages, uploadedImages, uploadFiles, coverSelection } = params;
+  const { existingImages, manualImages, uploadedImages, uploadFiles, coverSelection, imageOrderSelections = [] } = params;
   const images = normalizeImageUrls([...existingImages, ...manualImages, ...uploadedImages]);
 
+  const imageUrlsBySelection = new Map<string, string>();
+  existingImages.forEach((imageUrl) => {
+    const normalizedUrl = normalizeImageUrl(imageUrl);
+    if (normalizedUrl) {
+      imageUrlsBySelection.set(createUrlCoverSelection(normalizedUrl), normalizedUrl);
+    }
+  });
+  manualImages.forEach((imageUrl) => {
+    const normalizedUrl = normalizeImageUrl(imageUrl);
+    if (normalizedUrl) {
+      imageUrlsBySelection.set(createUrlCoverSelection(normalizedUrl), normalizedUrl);
+    }
+  });
+  uploadFiles.forEach((file, index) => {
+    const uploadedImage = normalizeImageUrl(uploadedImages[index] ?? null);
+    if (uploadedImage) {
+      imageUrlsBySelection.set(createUploadCoverSelection(file), uploadedImage);
+    }
+  });
+
+  const orderedImages: string[] = [];
+  const usedImages = new Set<string>();
+
+  imageOrderSelections.forEach((selection) => {
+    const imageUrl = imageUrlsBySelection.get(selection);
+    if (imageUrl && !usedImages.has(imageUrl)) {
+      orderedImages.push(imageUrl);
+      usedImages.add(imageUrl);
+    }
+  });
+
+  images.forEach((imageUrl) => {
+    if (!usedImages.has(imageUrl)) {
+      orderedImages.push(imageUrl);
+      usedImages.add(imageUrl);
+    }
+  });
+
   if (!coverSelection) {
-    return images;
+    return orderedImages;
   }
 
   let coverImageUrl: string | null = null;
@@ -106,15 +169,15 @@ export function sortImagesWithCoverSelection(params: {
   }
 
   if (!coverImageUrl) {
-    return images;
+    return orderedImages;
   }
 
-  const coverIndex = images.indexOf(coverImageUrl);
+  const coverIndex = orderedImages.indexOf(coverImageUrl);
   if (coverIndex <= 0) {
-    return images;
+    return orderedImages;
   }
 
-  return [images[coverIndex], ...images.filter((_, index) => index !== coverIndex)];
+  return [orderedImages[coverIndex], ...orderedImages.filter((_, index) => index !== coverIndex)];
 }
 
 export function getAnnuncioImages(annuncio: AnnuncioWithImages): string[] {

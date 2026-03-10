@@ -164,7 +164,7 @@ export default async function DettaglioAnnuncio({ params }: Props) {
                 <DetailItem label="IPE" value={annuncio.ipe ? String(annuncio.ipe) : '--'} />
                 <DetailItem label="Riscaldamento" value={annuncio.riscaldamento || '--'} />
                 <DetailItem label="Tipo riscaldamento" value={annuncio.tipo_riscaldamento || '--'} />
-                <DetailItem label="Sistema radiante" value={annuncio.sistema_radiante || '--'} />
+                <DetailItem label="Tipo di sistema" value={annuncio.sistema_radiante || '--'} />
                 <DetailItem label="Cucina" value={annuncio.cucina || '--'} />
                 <DetailItem label="Box" value={annuncio.box || '--'} />
               </div>

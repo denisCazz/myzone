@@ -24,6 +24,6 @@ export const siteConfig = {
   zone: "Cavallermaggiore e dintorni",
   social: {
     facebook: "https://www.facebook.com/profile.php?id=61579408569162",
-    instagram: "https://www.instagram.com/myzone_agenziaimmobiliare/",
+    instagram: "https://www.instagram.com/myzonecavallermaggiore/",
   },
 } as const;

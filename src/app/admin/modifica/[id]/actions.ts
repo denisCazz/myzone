@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdminSession } from '@/lib/admin-auth';
 import { getSupabaseAdminClient } from '@/lib/supabase-admin';
-import { parseExistingImagesJson, parseImageUrlsFromText, MAX_ANNUNCIO_IMAGES, sortImagesWithCoverSelection } from '@/lib/annuncio-images';
+import { parseExistingImagesJson, parseImageOrderSelectionsJson, parseImageUrlsFromText, MAX_ANNUNCIO_IMAGES, sortImagesWithCoverSelection } from '@/lib/annuncio-images';
 import { getCloudflareR2ConfigStatus, uploadImagesToCloudflareR2 } from '@/lib/cloudflare-images';
 
 export type UpdateState = {
@@ -41,6 +41,7 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
   const manualImages = parseImageUrlsFromText(String(formData.get('manual_image_urls') || ''));
   const uploadFiles = formData.getAll('immagini').filter((value): value is File => value instanceof File && value.size > 0);
   const coverSelection = String(formData.get('cover_image_selection') || '').trim() || null;
+  const imageOrderSelections = parseImageOrderSelectionsJson(formData.get('image_order_selections'));
   const piano = String(formData.get('piano') || '').trim();
   const ape = String(formData.get('ape') || '').trim();
   const riscaldamento = String(formData.get('riscaldamento') || '').trim();
@@ -104,6 +105,7 @@ export async function updateAnnuncioAction(id: string, _: UpdateState, formData:
     uploadedImages,
     uploadFiles,
     coverSelection,
+    imageOrderSelections,
   });
   const immagineUrl = immaginiUrls[0] || null;
 

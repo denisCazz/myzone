@@ -92,7 +92,7 @@ export default function EditAnnuncioForm({ annuncio }: { annuncio: AnnuncioForm 
           </div>
         )}
 
-        <form key={state.formData ? 'restored' : annuncio.id} action={formAction} encType="multipart/form-data" className="space-y-8">
+        <form key={state.formData ? 'restored' : annuncio.id} action={formAction} className="space-y-8">
           <section className="space-y-6">
             <h2 className="text-lg font-semibold text-secondary">Informazioni principali</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -132,6 +132,7 @@ export default function EditAnnuncioForm({ annuncio }: { annuncio: AnnuncioForm 
                 <AnnuncioImagesField
                   initialImages={Array.isArray(initialImages) ? initialImages : []}
                   initialManualUrlsText={state.formData?.manual_image_urls ?? ''}
+                  initialImageOrderSelectionsText={state.formData?.image_order_selections}
                 />
               </div>
               <div className="sm:col-span-2">
@@ -170,7 +171,7 @@ export default function EditAnnuncioForm({ annuncio }: { annuncio: AnnuncioForm 
               <div><label htmlFor="ipe" className="block text-sm font-medium text-secondary mb-1">IPE</label><input id="ipe" name="ipe" type="number" min="0" step="0.01" defaultValue={state.formData?.ipe ?? annuncio.ipe ?? 0} className={inputClass} /></div>
               <div><label htmlFor="riscaldamento" className="block text-sm font-medium text-secondary mb-1">Riscaldamento</label><input id="riscaldamento" name="riscaldamento" defaultValue={state.formData?.riscaldamento ?? annuncio.riscaldamento ?? ''} className={inputClass} /></div>
               <div><label htmlFor="tipo_riscaldamento" className="block text-sm font-medium text-secondary mb-1">Tipo riscaldamento</label><input id="tipo_riscaldamento" name="tipo_riscaldamento" defaultValue={state.formData?.tipo_riscaldamento ?? annuncio.tipo_riscaldamento ?? ''} className={inputClass} /></div>
-              <div><label htmlFor="sistema_radiante" className="block text-sm font-medium text-secondary mb-1">Sistema radiante</label><input id="sistema_radiante" name="sistema_radiante" defaultValue={state.formData?.sistema_radiante ?? annuncio.sistema_radiante ?? ''} className={inputClass} /></div>
+              <div><label htmlFor="sistema_radiante" className="block text-sm font-medium text-secondary mb-1">Tipo di sistema</label><input id="sistema_radiante" name="sistema_radiante" defaultValue={state.formData?.sistema_radiante ?? annuncio.sistema_radiante ?? ''} className={inputClass} /></div>
               <div><label htmlFor="cucina" className="block text-sm font-medium text-secondary mb-1">Cucina</label><input id="cucina" name="cucina" defaultValue={state.formData?.cucina ?? annuncio.cucina ?? ''} className={inputClass} /></div>
               <div><label htmlFor="box" className="block text-sm font-medium text-secondary mb-1">Box</label><input id="box" name="box" defaultValue={state.formData?.box ?? annuncio.box ?? ''} className={inputClass} /></div>
             </div>

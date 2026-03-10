@@ -45,7 +45,7 @@ export default function AdminNewForm() {
           </div>
         )}
 
-        <form key={state.formData ? 'restored' : 'new'} action={formAction} encType="multipart/form-data" className="space-y-8">
+        <form key={state.formData ? 'restored' : 'new'} action={formAction} className="space-y-8">
           <section className="space-y-6">
             <h2 className="text-lg font-semibold text-secondary">Informazioni principali</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -88,7 +88,10 @@ export default function AdminNewForm() {
               </div>
 
               <div className="sm:col-span-2">
-                <AnnuncioImagesField initialManualUrlsText={state.formData?.manual_image_urls ?? ''} />
+                <AnnuncioImagesField
+                  initialManualUrlsText={state.formData?.manual_image_urls ?? ''}
+                  initialImageOrderSelectionsText={state.formData?.image_order_selections}
+                />
               </div>
 
               <div className="sm:col-span-2">
@@ -152,7 +155,7 @@ export default function AdminNewForm() {
                 <input id="tipo_riscaldamento" name="tipo_riscaldamento" className={inputClass} defaultValue={state.formData?.tipo_riscaldamento ?? ''} />
               </div>
               <div>
-                <label htmlFor="sistema_radiante" className="block text-sm font-medium text-secondary mb-1">Sistema radiante</label>
+                <label htmlFor="sistema_radiante" className="block text-sm font-medium text-secondary mb-1">Tipo di sistema</label>
                 <input id="sistema_radiante" name="sistema_radiante" className={inputClass} defaultValue={state.formData?.sistema_radiante ?? ''} />
               </div>
               <div>
