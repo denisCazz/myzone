@@ -46,28 +46,27 @@ export default function ExternalMapEmbed({
   }
 
   return (
-    <div className="flex h-full flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-white p-6 text-center">
-      <div className="max-w-md">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <MapPin className="h-7 w-7" />
+    <div className="flex h-full items-center justify-center bg-gradient-to-br from-primary/5 to-white px-4 py-4 text-center sm:p-6">
+      <div className="w-full max-w-sm">
+        <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary sm:mb-4 sm:h-14 sm:w-14">
+          <MapPin className="h-5 w-5 sm:h-7 sm:w-7" />
         </div>
-        <h3 className="text-xl font-bold text-secondary">Carica la mappa</h3>
-        <p className="mt-3 text-sm leading-relaxed text-secondary/80">
-          Per tutelare meglio la privacy, la mappa esterna non viene caricata automaticamente. Premendo il
-          pulsante qui sotto potresti inviare dati tecnici al servizio cartografico esterno.
+        <h3 className="text-base font-bold text-secondary sm:text-xl">Carica la mappa</h3>
+        <p className="mt-2 text-sm leading-5 text-secondary/80 sm:mt-3 sm:leading-6">
+          La mappa esterna non viene caricata automaticamente per maggiore privacy.
         </p>
-        <p className="mt-3 text-sm text-secondary/80">
-          Maggiori dettagli sono disponibili nella{" "}
+        <p className="mt-2 text-xs leading-5 text-secondary/70 sm:mt-3 sm:text-sm sm:leading-6">
+          Caricandola potresti inviare dati tecnici al servizio esterno. Dettagli nella{" "}
           <Link href="/cookie-policy" className="font-semibold text-primary hover:underline">
             Cookie Policy
           </Link>
           .
         </p>
-        <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:justify-center">
           <button
             type="button"
             onClick={() => setIsLoaded(true)}
-            className="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 font-semibold text-white transition-colors hover:bg-primary/90"
+            className="inline-flex w-full items-center justify-center rounded-2xl bg-primary px-5 py-3 font-semibold text-white transition-colors hover:bg-primary/90 sm:w-auto"
           >
             Carica la mappa
           </button>
@@ -75,9 +74,9 @@ export default function ExternalMapEmbed({
             href={mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-2xl border border-primary/15 px-5 py-3 font-semibold text-secondary transition-colors hover:border-primary/30 hover:text-primary"
+            className="inline-flex w-full items-center justify-center px-2 py-1 text-sm font-semibold text-primary transition-colors hover:underline sm:w-auto"
           >
-            Apri direttamente in Google Maps
+            Oppure apri Google Maps
           </a>
         </div>
       </div>
