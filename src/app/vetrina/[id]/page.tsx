@@ -12,13 +12,63 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const supabase = getSupabaseServerClient();
-  if (!supabase) return { title: 'Annuncio' };
-  const { data } = await supabase.from('annunci').select('titolo, prezzo, comune').eq('id', id).single();
-  if (!data) return { title: 'Annuncio' };
+  const canonicalPath = `/vetrina/${id}`;
+
+  if (!supabase) {
+    return {
+      title: 'Scheda immobile',
+      alternates: {
+        canonical: canonicalPath,
+      },
+    };
+  }
+
+  const { data } = await supabase
+    .from('annunci')
+    .select('titolo, prezzo, comune, tipologia_immobile, tipo_contratto, immagine_url, immagini_urls')
+    .eq('id', id)
+    .single();
+
+  if (!data) {
+    return {
+      title: 'Scheda immobile',
+      alternates: {
+        canonical: canonicalPath,
+      },
+    };
+  }
+
   const price = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(data.prezzo);
+  const images = getAnnuncioImages(data);
+  const previewImage = images[0] ?? `${siteConfig.url}${siteConfig.images.logo}`;
+  const title = `${data.titolo} a ${data.comune}`;
+  const description = `${data.tipologia_immobile || 'Immobile'} ${data.tipo_contratto.toLowerCase()} a ${data.comune} - ${price}. Guarda foto, dettagli e contatta ${siteConfig.name}.`;
+
   return {
-    title: `${data.titolo} | ${siteConfig.name}`,
-    description: `Immobile a ${data.comune} - ${price}. Scopri i dettagli su ${siteConfig.name}.`,
+    title,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      url: canonicalPath,
+      title: `${title} | ${siteConfig.name}`,
+      description,
+      images: [
+        {
+          url: previewImage,
+          width: 1200,
+          height: 630,
+          alt: data.titolo,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ${siteConfig.name}`,
+      description,
+      images: [previewImage],
+    },
   };
 }
 

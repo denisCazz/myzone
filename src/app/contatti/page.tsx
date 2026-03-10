@@ -1,12 +1,35 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { MapPin, Phone, Mail, Facebook, Instagram, Clock } from "lucide-react";
 import ExternalMapEmbed from "@/components/ExternalMapEmbed";
 import { siteConfig } from "@/lib/site-config";
 
-export const metadata = {
-  title: "Contatti | MyZone",
-  description: "Contatta MyZone - Agenzia Immobiliare a Cavallermaggiore. Indirizzo, telefono, email e social.",
+export const metadata: Metadata = {
+  title: "Contatti",
+  description: "Contatta MyZone a Cavallermaggiore: indirizzo, telefono, email, orari d'ufficio e link ai profili social.",
+  alternates: {
+    canonical: "/contatti",
+  },
+  openGraph: {
+    url: "/contatti",
+    title: "Contatti | MyZone",
+    description: "Indirizzo, telefono, email e orari di MyZone a Cavallermaggiore.",
+    images: [
+      {
+        url: `${siteConfig.url}${siteConfig.images.logo}`,
+        width: 1200,
+        height: 630,
+        alt: "Contatti MyZone",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contatti | MyZone",
+    description: "Indirizzo, telefono, email e orari di MyZone a Cavallermaggiore.",
+    images: [`${siteConfig.url}${siteConfig.images.logo}`],
+  },
 };
 
 export default function ContattiPage() {

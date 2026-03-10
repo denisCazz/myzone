@@ -1,8 +1,40 @@
 import { getSupabaseServerClient } from '@/lib/supabase-server';
+import type { Metadata } from 'next';
 import { Annuncio } from '@/types';
 import { MapPin } from 'lucide-react';
 import PageHero from '@/components/PageHero';
 import VetrinaFiltri from '@/components/VetrinaFiltri';
+import { siteConfig } from '@/lib/site-config';
+
+export const metadata: Metadata = {
+  title: 'Vetrina Immobili',
+  description:
+    'Esplora gli annunci immobiliari MyZone in vendita e in affitto tra Cavallermaggiore e dintorni, con foto, dettagli e contatti diretti.',
+  alternates: {
+    canonical: '/vetrina',
+  },
+  openGraph: {
+    url: '/vetrina',
+    title: 'Vetrina Immobili | MyZone',
+    description:
+      'Annunci immobiliari selezionati da MyZone con schede complete, foto e informazioni aggiornate.',
+    images: [
+      {
+        url: `${siteConfig.url}${siteConfig.images.hero}`,
+        width: 1200,
+        height: 630,
+        alt: 'Vetrina immobili MyZone',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vetrina Immobili | MyZone',
+    description:
+      'Scopri gli immobili MyZone in vendita e in affitto tra Cavallermaggiore e dintorni.',
+    images: [`${siteConfig.url}${siteConfig.images.hero}`],
+  },
+};
 
 export default async function Vetrina() {
   const supabase = getSupabaseServerClient();

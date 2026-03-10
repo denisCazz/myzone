@@ -38,13 +38,9 @@ export const metadata: Metadata = {
     "immobiliare dintorni Cavallermaggiore",
     "MyZone",
   ],
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     locale: "it_IT",
-    url: "/",
     siteName: siteConfig.name,
     title: "MyZone | Agenzia Immobiliare a Cavallermaggiore",
     description:

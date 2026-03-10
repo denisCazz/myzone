@@ -1,6 +1,37 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/site-config';
 import ServizioImage from '@/components/ServizioImage';
+
+export const metadata: Metadata = {
+  title: 'Servizi Immobiliari',
+  description:
+    'Scopri i servizi MyZone per vendita, acquisto, affitto, valutazioni, consulenza tecnica e supporto finanziario a Cavallermaggiore e dintorni.',
+  alternates: {
+    canonical: '/servizi',
+  },
+  openGraph: {
+    url: '/servizi',
+    title: 'Servizi Immobiliari | MyZone',
+    description:
+      'Valutazioni, consulenza tecnica, supporto finanziario e gestione utenze per vendere o valorizzare il tuo immobile.',
+    images: [
+      {
+        url: `${siteConfig.url}${siteConfig.images.servizi.valutazioni}`,
+        width: 1200,
+        height: 630,
+        alt: 'Servizi immobiliari MyZone',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Servizi Immobiliari | MyZone',
+    description:
+      'Valutazioni, consulenza tecnica, supporto finanziario e gestione utenze per il tuo immobile.',
+    images: [`${siteConfig.url}${siteConfig.images.servizi.valutazioni}`],
+  },
+};
 
 const servizi = [
   {
