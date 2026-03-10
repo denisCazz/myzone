@@ -16,6 +16,7 @@ type ValutaCasaPayload = {
   metratura: string;
   tempistiche: string;
   note: string;
+  privacyAccepted: boolean;
 };
 
 function isValidPayload(payload: Partial<ValutaCasaPayload>) {
@@ -28,7 +29,8 @@ function isValidPayload(payload: Partial<ValutaCasaPayload>) {
       payload.telefono?.trim() &&
       payload.tipologia?.trim() &&
       payload.statoImmobile?.trim() &&
-      payload.tempistiche?.trim()
+      payload.tempistiche?.trim() &&
+      payload.privacyAccepted === true
   );
 }
 

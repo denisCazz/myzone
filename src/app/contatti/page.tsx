@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone, Mail, Facebook, Instagram, Clock } from "lucide-react";
+import ExternalMapEmbed from "@/components/ExternalMapEmbed";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata = {
@@ -9,6 +10,8 @@ export const metadata = {
 };
 
 export default function ContattiPage() {
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.fullAddress)}`;
+
   return (
     <div className="min-h-screen bg-white">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
@@ -38,7 +41,7 @@ export default function ContattiPage() {
 
               <div className="space-y-6">
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.fullAddress)}`}
+                  href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-4 group"
@@ -137,27 +140,11 @@ export default function ContattiPage() {
 
           {/* Mappa */}
           <div className="rounded-2xl overflow-hidden border border-primary/10 shadow-xl shadow-primary/10 h-[320px] sm:h-[450px] lg:h-[550px]">
-            <iframe
-              src="https://www.openstreetmap.org/export/embed.html?bbox=7.668%2C44.699%2C7.698%2C44.719&layer=mapnik&marker=44.709%2C7.683"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
+            <ExternalMapEmbed
+              embedUrl="https://www.openstreetmap.org/export/embed.html?bbox=7.668%2C44.699%2C7.698%2C44.719&layer=mapnik&marker=44.709%2C7.683"
               title="Mappa - MyZone Cavallermaggiore"
+              mapsUrl={mapsUrl}
             />
-            <div className="p-4 bg-white border-t border-primary/10">
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.fullAddress)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
-              >
-                <MapPin className="w-4 h-4" />
-                Apri in Google Maps
-              </a>
-            </div>
           </div>
         </div>
 

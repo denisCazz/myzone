@@ -12,6 +12,11 @@ const links = [
   { href: "/admin", label: "Accesso Admin" },
 ];
 
+const legalLinks = [
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/cookie-policy", label: "Cookie Policy" },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-primary text-white">
@@ -32,6 +37,18 @@ export default function Footer() {
               key={link.href}
               href={link.href}
               className="text-white/90 hover:text-white font-medium transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-sm">
+          {legalLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-white/80 hover:text-white transition-colors"
             >
               {link.label}
             </Link>

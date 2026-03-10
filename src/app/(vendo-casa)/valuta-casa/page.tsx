@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type ChangeEvent, type ComponentType } from 'react';
 import { CheckCircle2, Home, Clock3, ShieldCheck } from 'lucide-react';
 import PageHero from '@/components/PageHero';
@@ -16,7 +17,8 @@ export default function ValutaCasa() {
     statoImmobile: '',
     metratura: '',
     tempistiche: '',
-    note: ''
+    note: '',
+    privacyAccepted: false,
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -47,13 +49,22 @@ export default function ValutaCasa() {
       newErrors.telefono = 'Inserisci un numero di telefono valido';
     }
 
+    if (!formData.privacyAccepted) {
+      newErrors.privacyAccepted = "Devi prendere visione dell'informativa privacy";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const nextValue =
+      e.target instanceof HTMLInputElement && e.target.type === 'checkbox'
+        ? e.target.checked
+        : value;
+
+    setFormData(prev => ({ ...prev, [name]: nextValue }));
 
     if (errors[name]) {
       setErrors(prev => {
@@ -97,7 +108,8 @@ export default function ValutaCasa() {
         statoImmobile: '',
         metratura: '',
         tempistiche: '',
-        note: ''
+        note: '',
+        privacyAccepted: false,
       });
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -388,6 +400,32 @@ export default function ValutaCasa() {
               </div>
 
               <div className="pt-4">
+                <div className="mb-5 rounded-2xl border border-primary/10 bg-primary/5 px-4 py-4 text-sm text-secondary/85">
+                  I tuoi dati saranno usati solo per gestire la richiesta di valutazione e ricontattarti in merito
+                  all&apos;immobile indicato. Maggiori dettagli sono disponibili nella{" "}
+                  <Link href="/privacy-policy" className="font-semibold text-primary hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
+                </div>
+
+                <label className="flex items-start gap-3 rounded-2xl border border-primary/10 bg-white px-4 py-4 text-sm text-secondary/85">
+                  <input
+                    type="checkbox"
+                    name="privacyAccepted"
+                    checked={formData.privacyAccepted}
+                    onChange={handleChange}
+                    className="mt-1 h-4 w-4 rounded border-primary/30 text-primary focus:ring-primary/30"
+                  />
+                  <span>
+                    Dichiaro di aver preso visione dell&apos;informativa privacy e chiedo di essere
+                    ricontattato per la gestione della mia richiesta.
+                  </span>
+                </label>
+                {errors.privacyAccepted && (
+                  <p className="mt-2 text-sm text-red-600">{errors.privacyAccepted}</p>
+                )}
+
                 {submitError && (
                   <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                     {submitError}
