@@ -4,32 +4,70 @@ import { siteConfig } from '@/lib/site-config';
 import ServizioImage from '@/components/ServizioImage';
 
 export const metadata: Metadata = {
-  title: 'Servizi Immobiliari',
+  title: 'Servizi Immobiliari a Cavallermaggiore e provincia di Cuneo',
   description:
-    'Scopri i servizi MyZone per vendita, acquisto, affitto, valutazioni, consulenza tecnica e supporto finanziario a Cavallermaggiore e dintorni.',
+    'Servizi immobiliari MyZone: valutazioni professionali, consulenza finanziaria per mutui, consulenza tecnica (APE, catasto) e gestione utenze a Cavallermaggiore, Savigliano, Racconigi e dintorni.',
   alternates: {
     canonical: '/servizi',
   },
   openGraph: {
     url: '/servizi',
-    title: 'Servizi Immobiliari | MyZone',
+    title: 'Servizi Immobiliari a Cavallermaggiore e dintorni | MyZone',
     description:
-      'Valutazioni, consulenza tecnica, supporto finanziario e gestione utenze per vendere o valorizzare il tuo immobile.',
+      'Valutazioni immobiliari, consulenza tecnica e finanziaria, gestione utenze per vendere o valorizzare il tuo immobile a Cavallermaggiore e provincia di Cuneo.',
     images: [
       {
         url: `${siteConfig.url}${siteConfig.images.servizi.valutazioni}`,
         width: 1200,
         height: 630,
-        alt: 'Servizi immobiliari MyZone',
+        alt: 'Servizi immobiliari MyZone a Cavallermaggiore',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Servizi Immobiliari | MyZone',
+    title: 'Servizi Immobiliari a Cavallermaggiore | MyZone',
     description:
-      'Valutazioni, consulenza tecnica, supporto finanziario e gestione utenze per il tuo immobile.',
+      'Valutazioni, consulenza tecnica, supporto finanziario e gestione utenze a Cavallermaggiore e provincia di Cuneo.',
     images: [`${siteConfig.url}${siteConfig.images.servizi.valutazioni}`],
+  },
+};
+
+const serviziJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Servizi Immobiliari',
+  provider: {
+    '@type': 'RealEstateAgent',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    telephone: `+39${siteConfig.phone}`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: siteConfig.address,
+      addressLocality: 'Cavallermaggiore',
+      addressRegion: 'CN',
+      postalCode: '12030',
+      addressCountry: 'IT',
+    },
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Cavallermaggiore' },
+    { '@type': 'City', name: 'Savigliano' },
+    { '@type': 'City', name: 'Racconigi' },
+    { '@type': 'City', name: 'Saluzzo' },
+    { '@type': 'City', name: 'Fossano' },
+    { '@type': 'AdministrativeArea', name: 'Provincia di Cuneo' },
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servizi Immobiliari MyZone',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Valutazioni Immobiliari', description: 'Valutazioni precise basate sul mercato locale di Cavallermaggiore e dintorni' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Consulenza Finanziaria', description: 'Supporto per mutui e finanziamenti immobiliari' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Consulenza Tecnica', description: 'Pratiche catastali, certificazioni energetiche APE e regolarizzazioni urbanistiche' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Gestione Utenze', description: 'Volture e subentri luce, gas e acqua' } },
+    ],
   },
 };
 
@@ -67,6 +105,10 @@ const servizi = [
 export default function ServiziPage() {
   return (
     <div className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviziJsonLd) }}
+      />
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-14">
           <span className="text-xs uppercase tracking-[0.25em] text-primary font-bold">I Nostri Servizi</span>

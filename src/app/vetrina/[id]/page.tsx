@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const images = getAnnuncioImages(data);
   const previewImage = images[0] ?? `${siteConfig.url}${siteConfig.images.logo}`;
   const title = `${data.titolo} a ${data.comune}`;
-  const description = `${data.tipologia_immobile || 'Immobile'} ${data.tipo_contratto.toLowerCase()} a ${data.comune} - ${price}. Guarda foto, dettagli e contatta ${siteConfig.name}.`;
+  const description = `${data.tipologia_immobile || 'Immobile'} ${data.tipo_contratto.toLowerCase()} a ${data.comune} (provincia di Cuneo) - ${price}. Foto, planimetria, dettagli e contatti diretti con ${siteConfig.name}, agenzia immobiliare a Cavallermaggiore.`;
 
   return {
     title,
@@ -102,9 +102,47 @@ export default async function DettaglioAnnuncio({ params }: Props) {
   const telefono = annuncio.agenzia_telefono || siteConfig.phone;
   const immagini = getAnnuncioImages(annuncio);
 
+  const annuncioJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: annuncio.titolo,
+    description: annuncio.descrizione,
+    url: `${siteConfig.url}/vetrina/${annuncio.id}`,
+    datePosted: annuncio.created_at,
+    ...(annuncio.updated_at && { dateModified: annuncio.updated_at }),
+    image: immagini.length > 0 ? immagini : undefined,
+    offers: {
+      '@type': 'Offer',
+      price: annuncio.prezzo,
+      priceCurrency: 'EUR',
+      availability: annuncio.stato === 'DISPONIBILE'
+        ? 'https://schema.org/InStock'
+        : annuncio.stato === 'IN TRATTATIVA'
+        ? 'https://schema.org/LimitedAvailability'
+        : 'https://schema.org/SoldOut',
+    },
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: annuncio.indirizzo,
+      addressLocality: annuncio.comune,
+      addressRegion: annuncio.provincia,
+      addressCountry: 'IT',
+    },
+    floorSize: annuncio.superficie_mq ? {
+      '@type': 'QuantitativeValue',
+      value: annuncio.superficie_mq,
+      unitCode: 'MTK',
+    } : undefined,
+    numberOfRooms: annuncio.numero_locali,
+    numberOfBathroomsTotal: annuncio.bagni,
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Header con hero */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(annuncioJsonLd) }}
+      />
       <div className="bg-white border-b border-primary/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <nav className="flex items-center gap-2 text-sm text-secondary/70 mb-6">

@@ -21,7 +21,7 @@ export const siteConfig = {
   email: "ufficio@myzone.casa",
   phone: "3891104491",
   vatNumber: "04063560041",
-  zone: "Cavallermaggiore e dintorni",
+  zone: "Cavallermaggiore, Savigliano, Racconigi e dintorni",
   social: {
     facebook: "https://www.facebook.com/profile.php?id=61579408569162",
     instagram: "https://www.instagram.com/myzonecavallermaggiore/",

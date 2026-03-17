@@ -5,31 +5,31 @@ import { siteConfig } from '@/lib/site-config';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Agenzia Immobiliare a Cavallermaggiore e dintorni',
+  title: 'Agenzia Immobiliare a Cavallermaggiore, Savigliano, Racconigi e dintorni',
   description:
-    'Scopri MyZone: annunci in vendita e affitto, valutazioni professionali e consulenza immobiliare a Cavallermaggiore e dintorni.',
+    'MyZone: case in vendita e affitto, valutazioni professionali e consulenza immobiliare a Cavallermaggiore, Savigliano, Racconigi, Saluzzo, Fossano e provincia di Cuneo.',
   alternates: {
     canonical: '/',
   },
   openGraph: {
     url: '/',
-    title: 'MyZone | Agenzia Immobiliare a Cavallermaggiore e dintorni',
+    title: 'MyZone | Agenzia Immobiliare a Cavallermaggiore e provincia di Cuneo',
     description:
-      'Annunci in vendita e affitto, valutazioni immobiliari e consulenza professionale a Cavallermaggiore e dintorni.',
+      'Case in vendita e affitto, valutazioni immobiliari e consulenza professionale a Cavallermaggiore, Savigliano, Racconigi, Saluzzo e Fossano.',
     images: [
       {
         url: `${siteConfig.url}${siteConfig.images.logo}`,
         width: 1200,
         height: 630,
-        alt: 'Logo MyZone',
+        alt: 'MyZone - Agenzia Immobiliare a Cavallermaggiore e provincia di Cuneo',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MyZone | Agenzia Immobiliare a Cavallermaggiore e dintorni',
+    title: 'MyZone | Agenzia Immobiliare a Cavallermaggiore e provincia di Cuneo',
     description:
-      'Annunci in vendita e affitto, valutazioni immobiliari e consulenza professionale a Cavallermaggiore e dintorni.',
+      'Case in vendita e affitto, valutazioni immobiliari e consulenza a Cavallermaggiore, Savigliano, Racconigi e dintorni.',
     images: [`${siteConfig.url}${siteConfig.images.logo}`],
   },
 };
@@ -38,10 +38,13 @@ const localBusinessJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'RealEstateAgent',
   name: siteConfig.name,
+  alternateName: 'MyZone Immobiliare Cavallermaggiore',
   image: `${siteConfig.url}${siteConfig.images.logo}`,
+  logo: `${siteConfig.url}${siteConfig.images.logo}`,
   url: siteConfig.url,
   email: siteConfig.email,
-  telephone: siteConfig.phone,
+  telephone: `+39${siteConfig.phone}`,
+  priceRange: '€€',
   address: {
     '@type': 'PostalAddress',
     streetAddress: siteConfig.address,
@@ -50,8 +53,60 @@ const localBusinessJsonLd = {
     postalCode: '12030',
     addressCountry: 'IT',
   },
-  areaServed: ['Cavallermaggiore', 'dintorni di Cavallermaggiore'],
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 44.7093,
+    longitude: 7.6830,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '09:00',
+      closes: '12:30',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: '15:00',
+      closes: '19:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Saturday',
+      opens: '09:00',
+      closes: '12:30',
+    },
+  ],
+  areaServed: [
+    { '@type': 'City', name: 'Cavallermaggiore' },
+    { '@type': 'City', name: 'Savigliano' },
+    { '@type': 'City', name: 'Racconigi' },
+    { '@type': 'City', name: 'Saluzzo' },
+    { '@type': 'City', name: 'Fossano' },
+    { '@type': 'City', name: 'Bra' },
+    { '@type': 'City', name: 'Marene' },
+    { '@type': 'City', name: 'Monasterolo di Savigliano' },
+    { '@type': 'City', name: 'Ruffia' },
+    { '@type': 'City', name: 'Villafalletto' },
+    { '@type': 'City', name: 'Murello' },
+    { '@type': 'AdministrativeArea', name: 'Provincia di Cuneo' },
+  ],
+  sameAs: [
+    siteConfig.social.facebook,
+    siteConfig.social.instagram,
+  ],
   slogan: siteConfig.tagline,
+  description: 'Agenzia immobiliare a Cavallermaggiore specializzata in vendita, affitto e valutazioni immobiliari per Cavallermaggiore, Savigliano, Racconigi, Saluzzo, Fossano e tutta la provincia di Cuneo.',
+  knowsAbout: [
+    'Vendita immobili',
+    'Affitto immobili',
+    'Valutazioni immobiliari',
+    'Consulenza finanziaria mutui',
+    'Consulenza tecnica immobiliare',
+    'Certificazioni energetiche APE',
+    'Gestione utenze',
+  ],
 };
 
 export default function Home() {

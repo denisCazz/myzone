@@ -3,31 +3,31 @@ import { siteConfig } from '@/lib/site-config';
 import ValutaCasaClient from './ValutaCasaClient';
 
 export const metadata: Metadata = {
-  title: 'Valuta la tua casa',
+  title: 'Valutazione Casa Gratuita a Cavallermaggiore e dintorni',
   description:
-    'Richiedi una valutazione immobiliare professionale con MyZone a Cavallermaggiore e dintorni. Compila il modulo e ricevi una stima senza impegno.',
+    'Richiedi una valutazione immobiliare gratuita e senza impegno a Cavallermaggiore, Savigliano, Racconigi, Saluzzo e Fossano. MyZone: stima professionale basata sul mercato locale della provincia di Cuneo.',
   alternates: {
     canonical: '/valuta-casa',
   },
   openGraph: {
     url: '/valuta-casa',
-    title: 'Valuta la tua casa | MyZone',
+    title: 'Valutazione Casa Gratuita a Cavallermaggiore | MyZone',
     description:
-      'Richiedi una valutazione immobiliare senza impegno con supporto professionale e conoscenza del mercato locale.',
+      'Valutazione immobiliare professionale e senza impegno a Cavallermaggiore e provincia di Cuneo. Compila il modulo e ricevi una stima accurata.',
     images: [
       {
         url: `${siteConfig.url}${siteConfig.images.hero}`,
         width: 1200,
         height: 630,
-        alt: 'Valutazione casa MyZone',
+        alt: 'Valutazione casa gratuita MyZone a Cavallermaggiore',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Valuta la tua casa | MyZone',
+    title: 'Valutazione Casa Gratuita a Cavallermaggiore | MyZone',
     description:
-      'Richiedi una valutazione immobiliare senza impegno a Cavallermaggiore e dintorni.',
+      'Valutazione immobiliare senza impegno a Cavallermaggiore, Savigliano, Racconigi e provincia di Cuneo.',
     images: [`${siteConfig.url}${siteConfig.images.hero}`],
   },
 };

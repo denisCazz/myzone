@@ -7,31 +7,31 @@ import VetrinaFiltri from '@/components/VetrinaFiltri';
 import { siteConfig } from '@/lib/site-config';
 
 export const metadata: Metadata = {
-  title: 'Vetrina Immobili',
+  title: 'Case in Vendita e Affitto a Cavallermaggiore e dintorni',
   description:
-    'Esplora gli annunci immobiliari MyZone in vendita e in affitto tra Cavallermaggiore e dintorni, con foto, dettagli e contatti diretti.',
+    'Annunci immobiliari a Cavallermaggiore, Savigliano, Racconigi, Saluzzo e Fossano: case, appartamenti e ville in vendita e affitto con foto, dettagli e contatti diretti. Agenzia MyZone.',
   alternates: {
     canonical: '/vetrina',
   },
   openGraph: {
     url: '/vetrina',
-    title: 'Vetrina Immobili | MyZone',
+    title: 'Case in Vendita e Affitto a Cavallermaggiore | MyZone',
     description:
-      'Annunci immobiliari selezionati da MyZone con schede complete, foto e informazioni aggiornate.',
+      'Annunci immobiliari selezionati a Cavallermaggiore e provincia di Cuneo: case, appartamenti e ville con schede complete e foto.',
     images: [
       {
         url: `${siteConfig.url}${siteConfig.images.hero}`,
         width: 1200,
         height: 630,
-        alt: 'Vetrina immobili MyZone',
+        alt: 'Immobili in vendita e affitto a Cavallermaggiore - MyZone',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vetrina Immobili | MyZone',
+    title: 'Case in Vendita e Affitto a Cavallermaggiore | MyZone',
     description:
-      'Scopri gli immobili MyZone in vendita e in affitto tra Cavallermaggiore e dintorni.',
+      'Immobili in vendita e affitto a Cavallermaggiore, Savigliano, Racconigi e provincia di Cuneo.',
     images: [`${siteConfig.url}${siteConfig.images.hero}`],
   },
 };

@@ -6,29 +6,75 @@ import ExternalMapEmbed from "@/components/ExternalMapEmbed";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Contatti",
-  description: "Contatta MyZone a Cavallermaggiore: indirizzo, telefono, email, orari d'ufficio e link ai profili social.",
+  title: "Contatti Agenzia Immobiliare Cavallermaggiore",
+  description: "Contatta MyZone a Cavallermaggiore: Via Roma 78, telefono 389 110 4491, email, orari d'ufficio e indicazioni stradali. Agenzia immobiliare per Cavallermaggiore, Savigliano, Racconigi e dintorni.",
   alternates: {
     canonical: "/contatti",
   },
   openGraph: {
     url: "/contatti",
-    title: "Contatti | MyZone",
-    description: "Indirizzo, telefono, email e orari di MyZone a Cavallermaggiore.",
+    title: "Contatti | MyZone Immobiliare Cavallermaggiore",
+    description: "Indirizzo, telefono, email e orari di MyZone - Agenzia immobiliare a Cavallermaggiore e provincia di Cuneo.",
     images: [
       {
         url: `${siteConfig.url}${siteConfig.images.logo}`,
         width: 1200,
         height: 630,
-        alt: "Contatti MyZone",
+        alt: "Contatti MyZone - Agenzia Immobiliare Cavallermaggiore",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contatti | MyZone",
-    description: "Indirizzo, telefono, email e orari di MyZone a Cavallermaggiore.",
+    title: "Contatti | MyZone Immobiliare Cavallermaggiore",
+    description: "Indirizzo, telefono, email e orari di MyZone a Cavallermaggiore e provincia di Cuneo.",
     images: [`${siteConfig.url}${siteConfig.images.logo}`],
+  },
+};
+
+const contattiJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  mainEntity: {
+    '@type': 'RealEstateAgent',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    telephone: `+39${siteConfig.phone}`,
+    email: siteConfig.email,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: siteConfig.address,
+      addressLocality: 'Cavallermaggiore',
+      addressRegion: 'CN',
+      postalCode: '12030',
+      addressCountry: 'IT',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 44.7093,
+      longitude: 7.6830,
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '12:30',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '15:00',
+        closes: '19:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: 'Saturday',
+        opens: '09:00',
+        closes: '12:30',
+      },
+    ],
+    sameAs: [siteConfig.social.facebook, siteConfig.social.instagram],
   },
 };
 
@@ -37,6 +83,10 @@ export default function ContattiPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contattiJsonLd) }}
+      />
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center mb-10 sm:mb-14">
           <span className="text-xs uppercase tracking-[0.25em] text-primary font-bold">Contattaci</span>
